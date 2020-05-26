@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     int check;
     struct fb_var_screeninfo st_fvs;
  
-    user_fb my_fb = {400,240,24}; 
+    user_fb my_fb = {1024,600,32}; 
  
     frame_fd = open("/dev/fb0",O_RDWR);
     if(frame_fd < 0)
