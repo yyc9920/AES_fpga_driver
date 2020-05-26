@@ -1,0 +1,652 @@
+    1  ls
+    2  alias
+    3  nvim -v
+    4  vi .bashrc
+    5  source .bashrc
+    6  alias
+    7  exit
+    8  vi .bashrc
+    9  exit
+   10  vi .bashrc
+   11  source .bashrc
+   12  ls
+   13  ll
+   14  cd .config/
+   15  ls
+   16  cd ..
+   17  apt install neovim
+   18  nvim -v
+   19  cd /root/
+   20  sudo cd /root/
+   21  exit
+   22  ll
+   23  alias
+   24  exit
+   25  cd /mnt/d/YYC/Study/Vim/
+   26  vi deeplearningtest.py 
+   27  vi ~/.bashrc
+   28  source ~/.bashrc
+   29  alias
+   30  vrc
+   31  brc
+   32  exit
+   33  brc
+   34  source .bahsrc
+   35  source .bashrc
+   36  vrc
+   37  cd /mnt/d/YYC/Study/Vim/
+   38  vi deeplearningtest.py 
+   39  vrc
+   40  vi deeplearningtest.py 
+   41  cd
+   42  ls
+   43  ll
+   44  curl -fLo ~/.vim/autoload/plug.vim --create-dirs     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+   45  vrc
+   46  source .vimrc
+   47  vrc
+   48  source .vimrc
+   49  vrc
+   50  cd /mnt/d/YYC/Study/Vim/
+   51  vi deeplearningtest.py 
+   52  vrc
+   53  source ~/.vimrc
+   54  vrc
+   55  vi deeplearningtest.py 
+   56  vrc
+   57  source ~/.vimrc
+   58  vrc
+   59  vi deeplearningtest.py 
+   60  cd
+   61  ll
+   62  vi .
+   63  ls
+   64  ll
+   65  cd /mnt/d/YYC/Study/Vim/
+   66  ls
+   67  vi deeplearningtest.py 
+   68  cd
+   69  ping pi@172.30.1.60
+   70  ping 172.30.1.60
+   71  cp ../yyc9920/raspi ./
+   72  ls
+   73  ssh -i raspi pi@172.30.1.60
+   74  cp ../yyc9920/raspi.pub ./
+   75  l
+   76  ssh -i raspi pi@172.30.1.60
+   77  l
+   78  rm raspi*
+   79  l
+   80  ssh -i[B pi@172.30.1.60
+   81  exit
+   82  vrc
+   83  exit
+   84  su
+   85  exit
+   86  ls
+   87  ll
+   88  alias
+   89  brc
+   90  source .bashrc
+   91  alias
+   92  cd
+   93  ll
+   94  ssh pi@172.30.1.60
+   95  alias
+   96  cd /mnt/d/YYC/Study/Vim/
+   97  ls
+   98  cd ../../Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/C-files/Week\ 7/
+   99  ls
+  100  vi YechanYun15.c
+  101  vrc
+  102  srcv
+  103  vrc
+  104  vi YechanYun15.c
+  105  clang
+  106  apt install clang
+  107  alias
+  108  apti clang
+  109  apt install clang
+  110  sudo killall apt apt-get
+  111  killall apt apt-get
+  112  rm /var/lib/apt/lists/lock
+  113  rm /var/cache/apt/archives/lock
+  114  rm /var/lib/dpkg/lock*
+  115  dpkg --configure -a 
+  116  sudo dpkg --configure -a 
+  117  apt update
+  118  exit
+  119  apti clang
+  120  exit
+  121  apti clang
+  122  cd /mnt/d/YYC/Study/Vim/
+  123  cd ../../Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/C-files/Week\ 7/
+  124  ls
+  125  vi YechanYun15.c
+  126  rm -rf ~/.vim/plugged/YCM-Generator/
+  127  vrc
+  128  srcv
+  129  vrc
+  130  srcv
+  131  vrc
+  132  vi YechanYun15.c
+  133  ll
+  134  cd ~/.vim/plugged/youcompleteme/
+  135  ll
+  136  vi .ycm_extra_conf.py 
+  137  ll
+  138  ./.ycm_extra_conf.py 
+  139  vi .ycm_extra_conf.py 
+  140  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/C-files/Week\ 7/
+  141  ls
+  142  vi YechanYun15.c
+  143  cd ~/.vim/plugged/youcompleteme/
+  144  vi .ycm_extra_conf.py 
+  145  ll
+  146  ./install.sh
+  147  ll
+  148  ./print_todos.sh 
+  149  ./install.sh
+  150  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/C-files/Week\ 7/
+  151  vi YechanYun15.c
+  152  ls
+  153  cd ..
+  154  ls
+  155  mkdir Week\ 9
+  156  ls
+  157  cd Week\ 9
+  158  vi AVL_tree.c
+  159  gcc --version
+  160  gcc AVL_tree.c 
+  161  ls
+  162  ./a.out 
+  163  rm a.out 
+  164  vi Makefile
+  165  ls
+  166  make
+  167  ls
+  168  ./AVL_tree
+  169  vim
+  170  ls
+  171  mv quickref.txt /mnt/d/YYC/Study/Vim/
+  172  cd /mnt/d/YYC/Study/Vim/
+  173  ls
+  174  vi quickref.txt 
+  175  aptu vim
+  176  apti vim
+  177  vim
+  178  vim -V
+  179  vim --version
+  180  ls
+  181  rm quickref.txt 
+  182  ls
+  183  vim
+  184  vim --update
+  185  man vim
+  186  alias
+  187  brc
+  188  srcb
+  189  alias
+  190  aptg vim
+  191  aptu
+  192  aptg
+  193  vim --version
+  194  aptg vim
+  195  aptu vim
+  196  cd
+  197  ls
+  198  mkdir temp
+  199  cd temp/
+  200  git clone https://github.com/vim/vim.git
+  201  ls
+  202  cd vim/
+  203  ls
+  204  vi Makefile 
+  205  make
+  206  ls
+  207  sudo make install
+  208  cd
+  209  vim --version
+  210  vim
+  211  exit
+  212  ll
+  213  ssh pi@14.52.122.143
+  214  vrc
+  215  vi test
+  216  vim test
+  217  vim test.py
+  218  vrc
+  219  vim test.py
+  220  vrc
+  221  cd /mnt/d/YYC/Schoolwork/Capstone\ Design/App\ Developing/0\ NOW\ WORKING/
+  222  git clone git@github.com:llSourcell/A_Guide_to_Running_Tensorflow_Models_on_Android.git
+  223  sudo git clone git@github.com:llSourcell/A_Guide_to_Running_Tensorflow_Models_on_Android.git
+  224  ls
+  225  mv A_Guide_to_Running_Tensorflow_Models_on_Android/ Guide_TF_Models_on_Android/
+  226  ls
+  227  cd Guide_TF_Models_on_Android/
+  228  ls
+  229  ll
+  230  jupyter notebook Instructions.ipynb 
+  231  su
+  232  exit
+  233  alias
+  234  pip3in matplotlib
+  235  vi~/.pip/pip.conf
+  236  vi ~/.pip/pip.conf
+  237  sudo vi ~/.pip/pip.conf
+  238  cd ~/.pip
+  239  ls
+  240  mkdir .pip
+  241  cd .pip/
+  242  ls
+  243  vi pip.conf
+  244  pip3in matplotlib
+  245  cd
+  246  ssh pi@14.52.122.143
+  247  exit
+  248  cd /mnt/d/YYC/Schoolwork/Capstone\ Design/DeepLearning/Codes/
+  249  jupyter notebook
+  250  jupyter notebook --generate-conf
+  251  jupyter notebook password
+  252  jupyter notebook
+  253  exit
+  254  cd /dev/
+  255  ls
+  256  random
+  257  ./random
+  258  sudo ./random
+  259  vi random
+  260  cd
+  261  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/고급임베디드시스템/
+  262  ls
+  263  AES_Project/
+  264  ls
+  265  cd AES_Project/
+  266  ls
+  267  cd ..
+  268  mkdir testing
+  269  cd te
+  270  cd testing/
+  271  vi test.c
+  272  vrc
+  273  cd ~/.vim/plugged/
+  274  ls
+  275  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/고급임베디드시스템/AES_Project/
+  276  ls
+  277  cd ..
+  278  ls
+  279  cd testing/
+  280  vi test.c 
+  281  vim test.c 
+  282  git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  283  vrc
+  284  srcv
+  285  vrc
+  286  srcv
+  287  vrc
+  288  srcv
+  289  vrc
+  290  Plu:ㅔㅣㅕㅎㅈㅈㅂㅈ:ㅃqsdfdsdf
+  291  sf
+  292  :1
+  293  :q
+  294  cd .vim/bundle/
+  295  ls
+  296  cd
+  297  vrc
+  298  srcv
+  299  vim +PluginInstall
+  300  vrc
+  301  cd .vim/bundle/
+  302  ;s
+  303  ls
+  304  cd vim-autoclose/
+  305  ls
+  306  cd plugin/
+  307  ls
+  308  vi autoclose.vim 
+  309  cd
+  310  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/고급임베디드시스템/testing/
+  311  vi test.c 
+  312  vim --version
+  313  vim +autocmd
+  314  vi test.c 
+  315  vrc
+  316  vi test.c 
+  317  gcc -o test test.c
+  318  vi test.c 
+  319  gcc -o test test.c
+  320  ./test
+  321  ls
+  322  gcc -o test test.c
+  323  vi test.c 
+  324  rm test
+  325  gcc -o test test.c
+  326  ./test
+  327  vi test
+  328  vi test.c
+  329  ls
+  330  cd /mnt/d/YYC/Schoolwork/4-1\ Semester/AES/testing/
+  331  ls
+  332  gcc -o test test.c
+  333  ls
+  334  gdb test
+  335  apti gdb
+  336  gdb test
+  337  vi test.c
+  338  ls
+  339  rm test test.exe
+  340  ls
+  341  gcc -o test test.c
+  342  ./test
+  343  sudo passwd root
+  344  vrc
+  345  brc
+  346  srcb
+  347  alias
+  348  capstone
+  349  yyc
+  350  cd
+  351  capstone
+  352  yyc
+  353  cd
+  354  brc
+  355  srcb
+  356  capstone
+  357  brc
+  358  srcb
+  359  alias
+  360  srcb
+  361  brc
+  362  srcb
+  363  capstone
+  364  exit
+  365  alias
+  366  brc
+  367  srcb
+  368  git --configuration
+  369  git --config
+  370  yyc
+  371  cd Schoolwork/Capstone\ Design/App\ Developing/0\ NOW\ WORKING/
+  372  ls
+  373  git clone git@github.com:KeunJuSong/CapstoneDesign_FirebaseFaceDetection.git
+  374  sudo git clone git@github.com:KeunJuSong/CapstoneDesign_FirebaseFaceDetection.git
+  375  ls
+  376  cd CapstoneDesign_FirebaseFaceDetection/
+  377  ll
+  378  vi .gitignore 
+  379  cd ..
+  380  ls
+  381  cd CapstoneDesign_MLKit
+  382  ls
+  383  l
+  384  ll
+  385  vi .gitignore 
+  386  cd ..
+  387  cd CapstoneDesign_FirebaseFaceDetection/
+  388  ll
+  389  cd ..
+  390  mv CapstoneDesign_FirebaseFaceDetection/ Phodo
+  391  ls
+  392  cd Phodo/
+  393  ll
+  394  cd app/src/main/java/com/skj/firebasefacedetection_mycode/
+  395  ls
+  396  vi MainActivity.java 
+  397  cd 4..
+  398  cd ../../../../../..
+  399  cd ..
+  400  ls
+  401  git add .
+  402  git commit -m "cooperation test"
+  403  git config --global user.email "yyc837021@gmail.com"
+  404  git config --global user.name "yechanyun"
+  405  git commit -m "cooperation test"
+  406  git branch
+  407  git branch yyc
+  408  git branch
+  409  git checkout yyc
+  410  git add .
+  411  git commit -m "cooperation test"
+  412  git branch
+  413  git push origin yyc
+  414  git config
+  415  git config --local
+  416  git config --get
+  417  git push origin yyc
+  418  cd ~/.ssh
+  419  ls
+  420  ssh-keygen -t rsa -C "yyc837021@gmail.com"
+  421  ls
+  422  vi id_rsa.pub 
+  423  cd /mnt/d/YYC/Schoolwork/Capstone\ Design/App\ Developing/0\ NOW\ WORKING/P
+  424  cd /mnt/d/YYC/Schoolwork/Capstone\ Design/App\ Developing/0\ NOW\ WORKING/Phodo/
+  425  ls
+  426  ll
+  427  git branch
+  428  git add .
+  429  git commit -m "cooperate test"
+  430  git push origin yyc
+  431  git log
+  432  git branch
+  433  exit
+  434  echo $PS1
+  435  oldps1="$PS1"
+  436  export PS1="[\\u@\\H \\W \\@]\\$ "
+  437  export PS1="\e[0;31m[\u@\h \W]\$ \e[m"
+  438  export PS1="\[\e[32m\][\[\e[m\]\[\e[31m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  439  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  440  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[35m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  441  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  442  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[31m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  443  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  444  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  445  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[92m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  446  export PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  447  export PS1="\[\e[32m\][\[\e[m\]\[\e[96m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  448  export PS1="\[\e[32m\][\[\e[m\]\[\e[96m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  449  export PS1="\[\e[32m\][\[\e[m\]\[\e[96m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e<Esc>[38;5;135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  450  export PS1="\[\e[32m\][\[\e[m\]\[\e[96m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  451  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[96m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  452  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;124m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  453  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[91m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+  454  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[91m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  455  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[91m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  456  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  457  clear
+  458  vi bash_custom_setting.sh
+  459  echo %PS1
+  460  echo $PS1
+  461  vi bash_custom_setting.sh
+  462  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  463  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\@\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  464  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  465  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\\@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  466  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\] \@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  467  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\] \w\[\e[m\] \@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  468  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\@\[\e[38;5;45m\]][\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  469  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\@\[[\e[38;5;45m\][\e[38;5;15m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  470  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\\@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  471  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\@\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  472  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  473  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\@\[\e[m\]\[38;5;45m]\\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  474  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  475  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[33m\]\\$\[\e[m\] "
+  476  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  477  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;130m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  478  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  479  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\@\[\3[m\]\[\e[38;5;45m\]]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  480  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\@\[\3[m\]\[\e[38;5;45m\]]\w\\[e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  481  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  482  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\@\[\3[m\]\[\e[38;5;45m\]]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  483  vim
+  484  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\@\[\3[m\]\[\e[38;5;45m\]]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  485  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  486  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]@\[\e[38;5;34m\][\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  487  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  488  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;43m\]\@\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  489  exit
+  490  echo "$PS1"
+  491  oldps1="$PS1"
+  492  export PS1="\[\e[38;5;135m\][\[\e[m\]\[\e[38;5;212m\]\u\[\e[m\]\[\e[93m\]@\[\e[m\]\[\e[92m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\[\e[38;5;43m\]\@\[\e[m\]\[\e[38;5;135m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\] "
+  493  brc
+  494  gedit .bashrc
+  495  brc
+  496  srcb
+  497  brc
+  498  echo "$PS1"
+  499  brc
+  500  srcb
+  501  alias
+  502  brc
+  503  srcb
+  504  brc
+  505  srcb
+  506  brc
+  507  srcb
+  508  brc
+  509  srcb
+  510  brc
+  511  srcb
+  512  brc
+  513  srcb
+  514  brc
+  515  srcb
+  516  brc
+  517  srcb
+  518  brc
+  519  srcb
+  520  brc
+  521  srcb
+  522  clear
+  523  chdir /mnt
+  524  cd
+  525  exit
+  526  brc
+  527  srcb
+  528  brc
+  529  clear
+  530  cd /mnt/d/YYC/Schoolwork/Capstone\ Design/App\ Developing/0\ NOW\ WORKING/
+  531  ls
+  532  cd Phodo/
+  533  ls
+  534  cd app/src/main/java/com/skj/firebasefacedetection_mycode/
+  535  ls
+  536  vi CameraSource.java 
+  537  ls
+  538  cd
+  539  exit
+  540  clear
+  541  yyc
+  542  cd
+  543  brc
+  544  srcb
+  545  yyc
+  546  cd
+  547  yyc
+  548  ls
+  549  cd Only\ Jesus/
+  550  vi friday_sermon_200515.txt
+  551  cd
+  552  ll
+  553  cd /root/
+  554  ssh pi@172.30.1.60
+  555  ssh pi@172.30.1.60
+  556  cd /mnt/d/YYC/
+  557  ls
+  558  scp bash.txt pi@172.30.1.60:~/Desktop
+  559  ssh pi@172.30.1.60
+  560  exit
+  561  ls
+  562  ll
+  563  vi bash_custom_setting.sh 
+  564  vrc
+  565  srcv
+  566  vi bash_custom_setting.sh 
+  567  ll
+  568  sudo -i
+  569  exit
+  570  ls
+  571  yyc
+  572  cd Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/
+  573  ls
+  574  cd C-files/
+  575  ls
+  576  mkdir Week 10
+  577  cd Week 10/
+  578  ls
+  579  rmdir week 10
+  580  ls
+  581  mkdir Week\ 10
+  582  ls
+  583  mkdir Week\ 10/
+  584  ls
+  585  cd Week\ 10/
+  586  ls
+  587  yyc
+  588  cd Schoolwork/4-1\ Semester/Data\ Structure\ and\ Algorithm/
+  589  ls
+  590  cd C-files/
+  591  ls
+  592  gdb --version
+  593  ls
+  594  clear
+  595  ls
+  596  ll
+  597  vi bash_custom_setting.sh 
+  598  vi .vim
+  599  clear
+  600  ll
+  601  ssh pi@14.52.122.143
+  602  clear
+  603  ssh pi@14.52.122.143
+  604  clear
+  605  ls
+  606  clear
+  607  ll
+  608  yyc
+  609  ll
+  610  cd Schoolwork/
+  611  ls
+  612  cd 4-1\ Semester/AES/
+  613  ls
+  614  cd AES_Project/
+  615  ls
+  616  ll
+  617  cd ..
+  618  rm -rf AES_Project/
+  619  ls
+  620  rm -r AES_Project/
+  621  sudo rm -rf AES_Project/
+  622  ls
+  623  clear
+  624  ls
+  625  git clone git@github.com:yyc9920/AES_Project.git
+  626  ls
+  627  sudo git clone git@github.com:yyc9920/AES_Project.git
+  628  ls
+  629  cd AES_Project/
+  630  ls
+  631  cd achroimx6q/fpga_driver/
+  632  cd pushswitch/
+  633  ls
+  634  make clean
+  635  ls
+  636  vi fpga_push_switch_driver.c 
+  637  clear
+  638  srcb
+  639  man history
+  640  history
+  641  clear
+  642  whatis cal
+  643  whatis rm
+  644  cal
+  645  apropos app
+  646  clear
+  647  clc
+  648  cls
+  649  clear
+  650  history | less
+  651  ls -al
+  652  history > history.txt
