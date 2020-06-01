@@ -10,7 +10,7 @@ unsigned int makepixel(U32  r, U32 g, U32 b)
 {
     return (U32)((r<<16)|(g<<8)|b);
 }
- 
+
 int main(int argc, char** argv)
 {
     int check;

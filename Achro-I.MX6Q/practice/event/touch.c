@@ -14,6 +14,7 @@ int main()
 	int cnt = 0;
 	pid_t pid;
 	const char* evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
+	// TODO : Find this file in host PC.
 	struct input_event iev[3];
 	fd = open(evdev_path, O_RDONLY);
 	if(fd < 0) {

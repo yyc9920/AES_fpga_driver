@@ -1,0 +1,13 @@
+{
+    "code-runner.executorMap": {
+        "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
+    },
+    "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\cmd.exe",
+    "files.associations": {
+        "*.ino": "cpp",
+        "stdio.h": "c",
+        "cstdlib": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
