@@ -1,12 +1,13 @@
 DEV	:= test
 FND	:= fpga_fnd_driver
 SWT	:= fpga_push_switch_driver
+MT 	:= fpga_step_motor_driver
 APP	:= fpga_$(DEV)_test
 TFTPDIR := /tftpboot
 CC 	= arm-none-linux-gnueabi-gcc
 KDIR	:= /root/work/achroimx6q/kernel
 PWD	:= $(shell pwd)
-obj-m	:= $(FND).o $(SWT).o
+obj-m	:= $(FND).o $(SWT).o $(MT).o
 
 all:	$(FND) $(SWT) $(APP)
 
@@ -15,6 +16,9 @@ $(FND):	$(FND).c
 
 $(SWT):	$(SWT).c
 	$(MAKE)	-C $(KDIR) SUBDIRS=$(PWD) modules ARCH=arm
+
+$(MT): $(MT).c
+	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules ARCH=arm
 
 $(APP): $(APP).c
 	$(CC) -o $(APP) $(APP).c

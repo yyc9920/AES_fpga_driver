@@ -1,5 +1,5 @@
 #include "../include/fpga_test.h"
-
+// test
 void fnd(char* str) {
 	int dev_fnd, j;
 	unsigned char data[4];
