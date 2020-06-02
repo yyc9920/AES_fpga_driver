@@ -6,13 +6,12 @@
 
 int main(){
         int i;
-        unsigned char buffer[8];
+        unsigned char buffer[2];
         int fd = open("/dev/urandom", O_RDONLY);
-        read(fd, buffer, 8);
+        read(fd, buffer, 2);
         //buffer now contains the random data
         close(fd);
-        for(i = 0; i < 8; ++i)
-                printf("%02X", buffer[i]);
+                printf("%d", buffer[0]);
         printf("\n");
         return 0;
 }

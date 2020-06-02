@@ -2307,8 +2307,8 @@ int main(int argc, char* argv[])
         // clear the previous image (= fill entire screen)
         clear_screen(0);
 	drawline(100,400, xloc+222, 555);
-	draw_string(xloc, yloc, (char*)"HELLO WORLD", 11, 9, 0, 10, 1);
-	draw_string(33, 44, (char*)"KIDOEK KIM", 10, 7, 0, 10, 2);
+	draw_string(650, 0, (char*)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
+	draw_string(33, 80, (char*)"KIDOEK KIM", 10, 65000, 0, 10, 2);
 	draw_string(33, 144, (char*)"YECHAN YUN", 10, 6, 9, 10, 2);
 	draw_numbers(1000, 100, 10, 4, 0,  2, 10000, 1234); 
         // switch page
@@ -2348,4 +2348,5 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+
 
