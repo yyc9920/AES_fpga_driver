@@ -36,7 +36,7 @@ int push_switch(void) {
 		{
 			if(push_sw_buf[i])
 			{
-				data = i;
+				data = i + 1;
 				quit = 1;
 			}
 		}
