@@ -11,8 +11,8 @@ static int iom_fnd_release(struct inode *inode, struct file *file);
 struct file_operations iom_fnd_fops = {
 	.owner	= 	THIS_MODULE,
 	.open	=	iom_fnd_open,
-	.fnd_write	=	iom_fnd_write,
-	.fnd_read	=	iom_fnd_read,
+	.write	=	iom_fnd_write,
+	.read	=	iom_fnd_read,
 	.release   =	iom_fnd_release
 };
 

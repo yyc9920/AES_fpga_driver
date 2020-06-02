@@ -1,5 +1,7 @@
 #include "../include/fpga_driver.h"
 
+static int push_switch_port_usage = 0;
+static unsigned char *iom_fpga_push_switch_addr; 
 static int fnd_port_usage = 0;
 static unsigned char *iom_fpga_fnd_addr;     // 가상 주소를 저장할 변수
 
@@ -8,12 +10,24 @@ static ssize_t iom_fnd_write(struct file *file, const char *buf, size_t count, l
 static ssize_t iom_fnd_read(struct file *file, char *buf, size_t count, loff_t *f_pos);
 static int iom_fnd_open(struct inode *inode, struct file *file);
 static int iom_fnd_release(struct inode *inode, struct file *file);
+
+static ssize_t iom_push_switch_read(struct file *file, char *buf, size_t count, loff_t *f_pos);
+static int iom_push_switch_open(struct inode *inode, struct file *file);
+static int iom_push_switch_release(struct inode *inode, struct file *file);
+
 struct file_operations iom_fnd_fops = {
 	.owner	= 	THIS_MODULE,
 	.open	=	iom_fnd_open,
-	.fnd_write	=	iom_fnd_write,
-	.fnd_read	=	iom_fnd_read,
+	.write	=	iom_fnd_write,
+	.read	=	iom_fnd_read,
 	.release   =	iom_fnd_release
+};
+
+struct file_operations iom_push_switch_fops = {
+	.owner	= 	THIS_MODULE,
+	.open	=	iom_push_switch_open,
+	.read	=	iom_push_switch_read,
+	.release   =	iom_push_switch_release
 };
 
 static int iom_fnd_open(struct inode *inode, struct file *file) {
