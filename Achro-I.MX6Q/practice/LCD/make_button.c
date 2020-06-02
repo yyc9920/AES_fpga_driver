@@ -10,6 +10,7 @@
 #define deep_puple 44026
 #define puple 60957
 void make_button(int position_x, int frame_fd, struct fb_var_screeninfo fvs, short color,int mod);
+void make_button_y(int position_y, int frame_fd, struct fb_var_screeninfo fvs, short color,int mod);
 
 int main(int argc, char** argv) {
 	int check, frame_fd;
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
     make_button(200, frame_fd, fvs,deep_puple,1);
     make_button(400, frame_fd, fvs,puple,2);
     make_button(600, frame_fd, fvs,deep_puple,3);
+	make_button_y(200, frame_fd, fvs,992,1);
 	close(frame_fd);
 	return 0;
 }
@@ -43,7 +45,7 @@ void make_button(int position_x, int frame_fd, struct fb_var_screeninfo fvs, sho
 	if((unsigned)pfbdata == (unsigned)-1) {
 		perror("Error Mapping!\n");
 	}
-	for(repy = 0 ; repy < 80 ; repy++)
+	for(repy = 0; repy < 80; repy++)
 	{
 		offset = repy * fvs.xres;
 		for(repx = 0 + position_x; repx < 150 + position_x; repx++)
@@ -104,6 +106,93 @@ void make_button(int position_x, int frame_fd, struct fb_var_screeninfo fvs, sho
 				else if((repx - 15 - position_x)*(repx - 15 - position_x) + (repy-65)*(repy-65) <= 225)
 					*(pfbdata+offset+repx) = color;
 				else if((repx - 135 - position_x)*(repx - 135 - position_x) + (repy-65)*(repy-65) <= 225)
+					*(pfbdata+offset+repx) = color;
+				else
+					*(pfbdata+offset+repx) = 0;	
+			}
+		}
+		if(inc)
+		{
+			i++;
+			j--;
+			inc = 0;
+			printf("%d\n",i);
+		}
+	}
+	munmap(pfbdata,fvs.xres*fvs.yres*(sizeof(short))); // 맵핑된 메모리 해제
+}
+
+void make_button_y(int position_y, int frame_fd, struct fb_var_screeninfo fvs, short color,int mod)
+{
+	short* pfbdata;
+	int repy, repx, offset, i =0, inc = 0 , j = 40;
+	pfbdata = (short *) mmap(0, fvs.xres*fvs.yres*(sizeof(short)), PROT_READ| \
+		PROT_WRITE, MAP_SHARED, frame_fd, 0); 
+	
+	if((unsigned)pfbdata == (unsigned)-1) {
+		perror("Error Mapping!\n");
+	}
+	for(repy = 0 + position_y; repy < 80 + position_y; repy++)
+	{
+		offset = repy * fvs.xres;
+		for(repx = 0; repx < 150; repx++)
+		{
+			if((repx >= 15 || repy + position_y >= 15) && (repx < 135 || repy + position_y >= 15)&&\
+				(repx >= 15 || repy + position_y < 65) && (repx < 135 || repy + position_y < 65)) 
+			{
+				if(mod == 0)
+				{	
+					if((repx - 75)*(repx - 75) + (repy-position_y-40)*(repy-position_y-40) <= 529 &&\
+						(repx - 75)*(repx - 75) + (repy-position_y-40)*(repy-position_y-40) >= 324)
+						*(pfbdata+offset+repx) = 0;
+					else
+						*(pfbdata+offset+repx) = color;
+				}
+				else if(mod == 1)
+				{	
+					if((repx - 75 >= -20 && repx - 75 < 20) &&\
+						(repy-position_y - 40 >= -20 && repy-position_y - 40 < 20)) 	
+					{
+						if((repy-position_y - 40 >= repx -75 -1) && (repy-position_y - 40 <= repx - 75 + 1))
+							*(pfbdata+offset+repx) = 0;
+						else if((repy-position_y - 40 <= -1 * (repx -75) +1) && (repy-position_y - 40 >= -1*( repx - 75) - 1))
+							*(pfbdata+offset+repx) = 0;
+						else
+							*(pfbdata+offset+repx) = color;
+					}
+					else
+						*(pfbdata+offset+repx) = color;
+				}
+				else if(mod == 2)
+				{
+					if((repy-position_y >= 20 && repy- position_y<= 60) && ((repx - 75 >= -1 * i) &&( repx - 75 <= i)))
+					{
+						*(pfbdata+offset+repx) = 0;
+						inc = 1;
+					}
+					else
+						*(pfbdata+offset+repx) = color;
+				}
+				else if(mod == 3)
+				{
+					if((repy-position_y >= 20 && repy-position_y <= 60) && ((repx - 75 >= -1 * j) &&( repx - 75 <= j)))
+					{
+						*(pfbdata+offset+repx) = 0;
+						inc = 1;
+					}
+					else
+						*(pfbdata+offset+repx) = color;
+				}
+			}
+			else
+			{
+				if((repx - 15)*(repx - 15) + (repy-position_y-15)*(repy-position_y-15) <= 225)
+					*(pfbdata+offset+repx) = color;
+				else if((repx - 135)*(repx - 135) + (repy-position_y-15)*(repy-position_y-15) <= 225)
+					*(pfbdata+offset+repx) = color;
+				else if((repx - 15)*(repx - 15) + (repy-position_y-65)*(repy-position_y-65) <= 225)
+					*(pfbdata+offset+repx) = color;
+				else if((repx - 135)*(repx - 135) + (repy-position_y-65)*(repy-position_y-65) <= 225)
 					*(pfbdata+offset+repx) = color;
 				else
 					*(pfbdata+offset+repx) = 0;	

@@ -18,29 +18,23 @@ int main()
 	struct input_event iev[3];
 	fd = open(evdev_path, O_RDONLY);
 	if(fd < 0) {
-		perror("error: could not open evdev");
+		printf("error: could not open evdev");
 		return 0;
-	}
-
-	pid = fork();
-	if(pid>0){
-		printf("parents is alive\n");
-		printf("parent process is %d\n", getpid());
-		sleep(50);
-	}
-	else if(pid == 0){//0 = children pross
-		printf("child process\n");
-		printf("child process is %d\n", getpid());
-
+	} else {
 		while(1)
 		{
+/*
 			ret = read(fd, iev, sizeof(struct input_event)*3);
 			if(ret < 0) {
-				printf("error: could not read input event\n");
-				perror("error: could not read input event");
+				printf("error: could not read input event");
 				break;
 			}
-
+*/
+/*
+			printf("test...\n");
+			sleep(2);
+			printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
+*/
 			if(iev[0].type == 1 && iev[1].type == 3 && iev[2].type == 3)
 			{
 				printf("touch!!!!\n");
@@ -51,22 +45,20 @@ int main()
 				printf("hands off!!!\n");
 			}
 			else if(iev[0].type == 0 && iev[1].type == 3 && iev[2].type == 0 ||\
-					iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
+				iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
 			{
 				printf("touching...\n");
 			}
+			else{
+				printf("test...\n");
+				sleep(2);
+			}		
 		}
 	}
-	else
-	{
-		printf("can't fork, erro\n");
-		exit(0);
-	}
-	kill(pid,SIGINT);
 	close(fd);
 
 	return 0;
 
-
+ 
 
 }
