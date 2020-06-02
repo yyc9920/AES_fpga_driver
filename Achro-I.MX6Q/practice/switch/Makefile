@@ -1,6 +1,6 @@
 #makefile for a basic kernel module
 obj-m := fpga_push_switch_driver.o
-KDIR :=/root/work/achroimx6q/kernel
+KDIR :=/work/achroimx6q/kernel
 PWD :=$(shell pwd)
 all: driver app
 #all: driver

@@ -43,9 +43,9 @@ int main(int argc, char** argv)
  
     pixel = makepixel(0,0,255); 
     posx1 = 100;  
-    posx2 = 150;  
+    posx2 = 200;  
     posy1 = 120;
-    posy2 = 170;
+    posy2 = 200;
  
     for(repy=posy1; repy < posy2; repy++) {
         offset = repy * fvs.xres * (32/8) + posx1 * (32/8);
