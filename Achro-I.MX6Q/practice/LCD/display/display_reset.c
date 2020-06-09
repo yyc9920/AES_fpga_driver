@@ -74,7 +74,7 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
+void getTouch(int *x, int *y)
 {
 	int fd, ret,i;
 	int cnt = 0;
@@ -113,8 +113,7 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
 				*x = iev[1].value;
 				*y = iev[2].value;
-				if(*x>=start_x && *x<=end_x && *y>=start_y && *y<=end_y)
-					break;
+				break;
 			}
 			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -132,11 +131,11 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 		printf("can't fork, erro\n");
 		exit(0);
 	}
+	kill(pid,SIGINT);
 }
 
 int main(int argc, char *argv[])
 {
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 	int x, y;
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -197,7 +196,6 @@ int main(int argc, char *argv[])
 		ascii_characters_SMALL[67] = C__10x14;
 		ascii_characters_SMALL[68] = D__10x14;
 		ascii_characters_SMALL[69] = E__10x14;
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 		ascii_characters_SMALL[70] = F__10x14;
 		ascii_characters_SMALL[71] = G__10x14;
 		ascii_characters_SMALL[72] = H__10x14;
@@ -323,12 +321,10 @@ int main(int argc, char *argv[])
 			// clear the previous image (= fill entire screen)
 			clear_screen(0);
 			drawline(100, 400, xloc + 222, 555);
-			draw_string(650, 20, (char *)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
-			draw_string(850, 80, (char *)"YECHAN YUN", 10, 6, 0, 10, 1);
-			draw_string(850, 100, (char *)"KIDEOK KIM", 10, 6, 0, 10, 1);
-			draw_string(805, 140, (char *)"B A S S", 7, 6, 0, 10, 2);
-			draw_string(880, 200, (char *)"START", 5, 6, 9, 10, 2);
-			
+			draw_string(650, 0, (char *)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
+			draw_string(33, 80, (char *)"KIDOEK KIM", 10, 65000, 0, 10, 2);
+			draw_string(33, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
+			draw_numbers(1000, 100, 10, 4, 0, 2, 10000, 1234);
 			// switch page
 			vinfo.yoffset = cur_page * vinfo.yres;
 			ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -363,9 +359,6 @@ int main(int argc, char *argv[])
 		printf("Error re-setting variable information.\n");
 	}
 
-	getTouch(&x, &y, 430, 400, 520, 460);
-	printf("After Touch\nx = %d, y = %d", x, y);
-	if(x>=430 && x<=520 && y>=400 && y<=460){
 
 		screensize = finfo.smem_len;
 		fbp = (char *)mmap(0,
@@ -393,10 +386,10 @@ int main(int argc, char *argv[])
 			{
 				// change page to draw to (between 0 and 1)
 				cur_page = (cur_page + 1) % 2;
-				clear_screen(0);
 				// clear the previous image (= fill entire screen)
+				clear_screen(0);
 				drawline(100, 400, xloc + 222, 555);
-				draw_string(880, 200, (char *)"SEND", 4, 6, 9, 10, 2);
+				draw_string(33, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 				// switch page
 				vinfo.yoffset = cur_page * vinfo.yres;
 				ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -430,7 +423,6 @@ int main(int argc, char *argv[])
 		{
 			printf("Error re-setting variable information.\n");
 		}
-	}
 	// close fb file
 	close(fbfd);
 
