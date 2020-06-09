@@ -113,8 +113,6 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
 				*x = iev[1].value;
 				*y = iev[2].value;
-				if(*x>=start_x && *x<=end_x && *y>=start_y && *y<=end_y)
-					break;
 			}
 			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -136,7 +134,6 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 
 int main(int argc, char *argv[])
 {
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 	int x, y;
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -197,7 +194,6 @@ int main(int argc, char *argv[])
 		ascii_characters_SMALL[67] = C__10x14;
 		ascii_characters_SMALL[68] = D__10x14;
 		ascii_characters_SMALL[69] = E__10x14;
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 		ascii_characters_SMALL[70] = F__10x14;
 		ascii_characters_SMALL[71] = G__10x14;
 		ascii_characters_SMALL[72] = H__10x14;
@@ -268,6 +264,7 @@ int main(int argc, char *argv[])
 	vinfo.yres = 600;
 	vinfo.xres_virtual = vinfo.xres;
 	vinfo.yres_virtual = vinfo.yres * 2;
+
 	if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo))
 	{
 		printf("Error setting variable information.\n");
@@ -293,146 +290,227 @@ int main(int argc, char *argv[])
 
 	page_size = finfo.line_length * vinfo.yres;
 
-	// map fb to user mem
-	screensize = finfo.smem_len;
-	fbp = (char *)mmap(0,
-			screensize,
-			PROT_READ | PROT_WRITE,
-			MAP_SHARED,
-			fbfd,
-			0);
-	if ((int)fbp == -1)
-	{
-		printf("Failed to mmap\n");
+	// close fb file
+	close(fbfd);
+	int fd, ret,i;
+	int cnt = 0;
+	pid_t pid;
+	const char* evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
+	// TODO : Find this file in host PC.
+	struct input_event iev[3];
+	fd = open(evdev_path, O_RDONLY);
+	if(fd < 0) {
+		perror("error: could not open evdev");
+		return;
+	}
+
+	pid = fork();
+	if(pid>0){
+		printf("parents is alive\n");
+		printf("parent process is %d\n", getpid());
+		sleep(50);
+	}
+	else if(pid == 0){//0 = children pross
+		printf("child process\n");
+		printf("child process is %d\n", getpid());
+
+		while(1)
+		{
+			// map fb to user mem
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				// draw...
+				//-----------------------------------------------------------graphics loop here
+
+				//	draw();
+
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(650, 0, (char *)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
+					draw_string(33, 80, (char *)"KIDOEK KIM", 10, 65000, 0, 10, 2);
+					draw_string(33, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
+					draw_numbers(1000, 100, 10, 4, 0, 2, 10000, 1234);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			getTouch(&x, &y, 0, 300, 220, 360);
+			printf("After Touch\nx = %d, y = %d", x, y);
+			if(x>=0 && x<=220 && y>=300 && y<=360){
+
+				screensize = finfo.smem_len;
+				fbp = (char *)mmap(0,
+						screensize,
+						PROT_READ | PROT_WRITE,
+						MAP_SHARED,
+						fbfd,
+						0);
+				if ((int)fbp == -1)
+				{
+					printf("Failed to mmap\n");
+				}
+				else
+				{
+					// draw...
+					//-----------------------------------------------------------graphics loop here
+
+					//	draw();
+
+					int fps = 60;
+					int secs = 10;
+					int xloc = 1;
+					int yloc = 1;
+					for (int i = 1; i < 3; i++)
+					{
+						// change page to draw to (between 0 and 1)
+						cur_page = (cur_page + 1) % 2;
+						clear_screen(0);
+						// clear the previous image (= fill entire screen)
+						drawline(100, 400, xloc + 222, 555);
+						draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
+						// switch page
+						vinfo.yoffset = cur_page * vinfo.yres;
+						ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+						// the call to waitforvsync should use a pointer to a variable
+						// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+						// so should be in fact like this:
+						__u32 dummy = 0;
+						ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+						// also should of course check the return values of the ioctl calls...
+						if (yloc >= vinfo.yres / 2)
+							yloc = 1;
+						if (xloc >= 100)
+							yloc = 1;
+						yloc++;
+						xloc++;
+					}
+					//-----------------------------------------------------------graphics loop here
+				}
+
+				// unmap fb file from memory
+				munmap(fbp, screensize);
+				// reset cursor
+				if (kbfd >= 0)
+				{
+					ioctl(kbfd, KDSETMODE, KD_TEXT);
+					// close kb file
+					close(kbfd);
+				}
+				// reset the display mode
+				if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+				{
+					printf("Error re-setting variable information.\n");
+				}
+			}
+			ret = read(fd, iev, sizeof(struct input_event)*3);
+			if(ret < 0) {
+				printf("error: could not read input event\n");
+				perror("error: could not read input event");
+				break;
+			}
+
+			if(iev[0].type == 1 && iev[1].type == 3 && iev[2].type == 3)
+			{
+				printf("touch!!!!\n");
+				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
+				x = iev[1].value;
+				y = iev[2].value;
+			}
+			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
+			{
+				printf("hands off!!!\n");
+			}
+			else if(iev[0].type == 0 && iev[1].type == 3 && iev[2].type == 0 ||\
+					iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
+			{
+				printf("touching...\n");
+			}
+		}
 	}
 	else
 	{
-		// draw...
-		//-----------------------------------------------------------graphics loop here
-
-		//	draw();
-
-		int fps = 60;
-		int secs = 10;
-		int xloc = 1;
-		int yloc = 1;
-		for (int i = 1; i < 3; i++)
-		{
-			// change page to draw to (between 0 and 1)
-			cur_page = (cur_page + 1) % 2;
-			// clear the previous image (= fill entire screen)
-			clear_screen(0);
-			drawline(100, 400, xloc + 222, 555);
-			draw_string(650, 20, (char *)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
-			draw_string(850, 80, (char *)"YECHAN YUN", 10, 6, 0, 10, 1);
-			draw_string(850, 100, (char *)"KIDEOK KIM", 10, 6, 0, 10, 1);
-			draw_string(805, 140, (char *)"B A S S", 7, 6, 0, 10, 2);
-			draw_string(880, 200, (char *)"START", 5, 6, 9, 10, 2);
-			
-			// switch page
-			vinfo.yoffset = cur_page * vinfo.yres;
-			ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
-			// the call to waitforvsync should use a pointer to a variable
-			// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
-			// so should be in fact like this:
-			__u32 dummy = 0;
-			ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
-			// also should of course check the return values of the ioctl calls...
-			if (yloc >= vinfo.yres / 2)
-				yloc = 1;
-			if (xloc >= 100)
-				yloc = 1;
-			yloc++;
-			xloc++;
-		}
-		//-----------------------------------------------------------graphics loop here
+		printf("can't fork, erro\n");
+		exit(0);
 	}
 
-	// unmap fb file from memory
-	munmap(fbp, screensize);
-	// reset cursor
-	if (kbfd >= 0)
+	// Open the framebuffer file for reading and writing
+	fbfd = open("/dev/fb0", O_RDWR);
+	if (fbfd == -1)
 	{
-		ioctl(kbfd, KDSETMODE, KD_TEXT);
-		// close kb file
-		close(kbfd);
+		printf("Error: cannot open framebuffer device.\n");
+		return (1);
 	}
-	// reset the display mode
-	if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+
+	// Get variable screen information
+	if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo))
 	{
-		printf("Error re-setting variable information.\n");
+		printf("Error reading variable information.\n");
 	}
 
-	getTouch(&x, &y, 430, 400, 520, 460);
-	printf("After Touch\nx = %d, y = %d", x, y);
-	if(x>=430 && x<=520 && y>=400 && y<=460){
-
-		screensize = finfo.smem_len;
-		fbp = (char *)mmap(0,
-				screensize,
-				PROT_READ | PROT_WRITE,
-				MAP_SHARED,
-				fbfd,
-				0);
-		if ((int)fbp == -1)
-		{
-			printf("Failed to mmap\n");
-		}
-		else
-		{
-			// draw...
-			//-----------------------------------------------------------graphics loop here
-
-			//	draw();
-
-			int fps = 60;
-			int secs = 10;
-			int xloc = 1;
-			int yloc = 1;
-			for (int i = 1; i < 3; i++)
-			{
-				// change page to draw to (between 0 and 1)
-				cur_page = (cur_page + 1) % 2;
-				clear_screen(0);
-				// clear the previous image (= fill entire screen)
-				drawline(100, 400, xloc + 222, 555);
-				draw_string(880, 200, (char *)"SEND", 4, 6, 9, 10, 2);
-				// switch page
-				vinfo.yoffset = cur_page * vinfo.yres;
-				ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
-				// the call to waitforvsync should use a pointer to a variable
-				// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
-				// so should be in fact like this:
-				__u32 dummy = 0;
-				ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
-				// also should of course check the return values of the ioctl calls...
-				if (yloc >= vinfo.yres / 2)
-					yloc = 1;
-				if (xloc >= 100)
-					yloc = 1;
-				yloc++;
-				xloc++;
-			}
-			//-----------------------------------------------------------graphics loop here
-		}
-
-		// unmap fb file from memory
-		munmap(fbp, screensize);
-		// reset cursor
-		if (kbfd >= 0)
-		{
-			ioctl(kbfd, KDSETMODE, KD_TEXT);
-			// close kb file
-			close(kbfd);
-		}
-		// reset the display mode
-		if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
-		{
-			printf("Error re-setting variable information.\n");
-		}
+	// Store for reset (copy vinfo to vinfo_orig)
+	memcpy(&orig_vinfo, &vinfo, sizeof(struct fb_var_screeninfo));
+	// Change variable info
+	vinfo.bits_per_pixel = 32;
+	// Can change res here, or leave what was found originally
+	vinfo.xres = 1024;
+	vinfo.yres = 600;
+	vinfo.xres_virtual = vinfo.xres;
+	vinfo.yres_virtual = vinfo.yres * 2;
+	if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo))
+	{
+		printf("Error setting variable information.\n");
 	}
-	// close fb file
-	close(fbfd);
+
 
 	return 0;
 }

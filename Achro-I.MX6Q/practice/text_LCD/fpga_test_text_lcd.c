@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	int dev;
 	int str_size;
 	int chk_size;
-	char *str = "ffffuck";
+	char *str = "yechan";
 	unsigned char string[32];
 	
 	memset(string,0,sizeof(string));
