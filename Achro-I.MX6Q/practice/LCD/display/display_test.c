@@ -83,7 +83,7 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
+void getTouch(int *x, int *y)
 {
 	int fd, ret,i;
 	int cnt = 0;
@@ -122,8 +122,7 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
 				*x = iev[1].value;
 				*y = iev[2].value;
-				if(*x>=start_x && *x<=end_x && *y>=start_y && *y<=end_y)
-					break;
+				break;
 			}
 			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -147,6 +146,7 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 int main(int argc, char *argv[])
 {
 	int x, y;
+	int clrcnt=0;
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
 	// The actual glyphs here. Discard that which is not used to save memory
@@ -327,6 +327,7 @@ int main(int argc, char *argv[])
 				int yloc = 1;
 				for (int i = 1; i < 3; i++)
 				{
+					clear_screen(0);
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
@@ -372,11 +373,13 @@ int main(int argc, char *argv[])
 			}
 
 			//step forwarwd to  step 1
-			getTouch(&x, &y, 430, 400, 520, 460);
+			do{
+				getTouch(&x, &y);
+			}while(x<=430 || x>=520 || y<=400 || y>=460);
 			printf("After Touch\nx = %d, y = %d", x, y);
 			if(x>=430 && x<=520 && y>=400 && y<=460){
+				clrcnt = 0;
 				step = 1;
-				clear_screen(0);
 			}
 		}
 
@@ -409,6 +412,8 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"CHECK BALANCE", 13, 6, 9, 10, 2);
 					draw_string(880, 120, (char *)"CHECK TRANSACTION HISTORY", 25, 6, 9, 10, 2);
@@ -434,6 +439,7 @@ int main(int argc, char *argv[])
 					yloc++;
 					xloc++;
 				}
+				clrcnt = 1;
 				//-----------------------------------------------------------graphics loop here
 			}
 
@@ -451,11 +457,126 @@ int main(int argc, char *argv[])
 			{
 				printf("Error re-setting variable information.\n");
 			}
+
+			//step backwarwd to step 0
+			do{
+				getTouch(&x, &y);
+				if(x>=430 && x<=520 && y>=390 && y<=460){
+					clrcnt = 0;
+					step = 2;
+					break;
+				}
+			}while(x<=800 || x>=940 || y<=0 || y>=60);
+			printf("After Touch\nx = %d, y = %d", x, y);
+			if(x>=800 && x<=940 && y>=0 && y<=60){
+				clrcnt = 0;
+				step = 0;
+			}else if(x>=430 && x<=520 && y>=390 && y<=460){
+				clrcnt = 0;
+				step = 2;
+			}
+		}
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if(step == 2) {
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
+					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
+					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(500, 200, (char *)"D", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			do{
+				getTouch(&x, &y);
+			}while(x<=800 || x>=940 || y<=0 || y>=60);
+			printf("After Touch\nx = %d, y = %d", x, y);
+			if(x>=800 && x<=940 && y>=0 && y<=60){
+				clrcnt = 0;
+				step = 0;
+			}else if(x>=430 && x<=520 && y>=390 && y<=460){
+				clrcnt = 0;
+				step = 1;		
+			}
 		}
 	}
 
 	/*--------------------------Get Touch And Redraw Display Here-------------------------*/
-
 
 	// close fb file
 	close(fbfd);
