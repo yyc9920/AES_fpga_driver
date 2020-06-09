@@ -330,7 +330,6 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(650, 20, (char *)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
 					draw_string(850, 80, (char *)"YECHAN YUN", 10, 6, 0, 10, 1);
@@ -377,6 +376,7 @@ int main(int argc, char *argv[])
 			printf("After Touch\nx = %d, y = %d", x, y);
 			if(x>=430 && x<=520 && y>=400 && y<=460){
 				step = 1;
+				clear_screen(0);
 			}
 		}
 
@@ -408,7 +408,6 @@ int main(int argc, char *argv[])
 				{
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
-					clear_screen(0);
 					// clear the previous image (= fill entire screen)
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"CHECK BALANCE", 13, 6, 9, 10, 2);
