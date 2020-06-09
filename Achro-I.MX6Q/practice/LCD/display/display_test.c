@@ -64,12 +64,8 @@ unsigned char *ascii_characters_SMALL[128]; // Store the ASCII character set, bu
 unsigned char *numbers_BIG[10];				// For quicker number display routines, these arrays of pointers to the numbers
 unsigned char *numbers_small[10];
 // 'global' variables to store screen info and take the frame buffer.
-int fbfd = 0;
-char *fbp = 0;
 struct fb_var_screeninfo vinfo;
 struct fb_fix_screeninfo finfo;
-int page_size = 0;
-int cur_page = 0;
 // helper function to 'plot' a pixel in given color
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point

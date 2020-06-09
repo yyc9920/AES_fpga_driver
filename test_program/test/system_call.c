@@ -3,7 +3,7 @@
 
 int main(){
         int buffer;
-		buffer = system("prng");
+		buffer = system("./prng");
 		printf("%d", buffer);
         printf("\n");
         return 0;

@@ -44,6 +44,7 @@ treeNode *insertKey(treeNode *p, element key)
             p->right = insertKey(p->right, key);
         else
             printf("\n 이미 같은 번호로 등록된 계좌가 있습니다. \n");
+        
         return p; // 삽입한 자리 반환
     }
 }
@@ -173,6 +174,8 @@ void main()
 {
     element e;
     treeNode *root = NULL, *temp = NULL;
+    int tmp;
+    char tmp2[10];
     int choice;
     do
     {
@@ -188,21 +191,24 @@ void main()
         case 2:
             printf("\n[이름 입력] 이름을 입력하시오 : ");
             scanf("%s", e.userName);
-            printf("\n[단어입력] 단어의 뜻을 입력하시오 : ");
-            scanf("%s", e.userName);
+            tmp = system("./prng");
+            sprintf(e.accountNum, "%d", tmp);
+            tmp = system("./prng");
+            sprintf(tmp2, "%d", tmp);
+            strcat(e.accountNum, tmp2);
             insert(&root, e);
             break;
         case 3:
             printf("\n[단어 삭제] 삭제할 단어 : ");
-            scanf("%s", e.word);
+            scanf("%s", e.accountNum);
             deleteNode(root, e);
             break;
         case 4:
             printf("\n[단어 검색] 검색할 단어 : ");
-            scanf("%s", e.word);
+            scanf("%s", e.userName);
             temp = searchBST(root, e);
             if (temp != NULL)
-                printf("\n단어 뜻 : %s", temp->key.mean);
+                printf("\n단어 뜻 : %s", temp->key.accountNum);
             else
                 printf("\n사전에 없는 단어입니다.");
             break;
