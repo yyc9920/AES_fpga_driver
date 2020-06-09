@@ -2308,8 +2308,8 @@ int main(int argc, char* argv[])
 					clear_screen(0);
 					drawline(100,400, xloc+222, 555);
 					draw_string(650, 0, (char*)"AES FINAL PROJECT", 17, 65535, 0, 10, 2);
-					draw_string(33, 80, (char*)"KIDOEK KIM", 10, 65000, 0, 10, 2);
-					draw_string(33, 144, (char*)"YECHAN YUN", 10, 6, 0, 10, 2);
+					draw_string(33, 80, (char*)"KIDOEK KIM", 10, 6, 0, 10, 2);
+					draw_string(33, 144, (char*)"YECHAN YUN", 10, 65000, 0, 10, 2);
 					draw_numbers(1000, 100, 10, 4, 0,  2, 10000, 1234); 
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;

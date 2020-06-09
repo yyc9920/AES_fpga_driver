@@ -49,6 +49,7 @@ int main()
 				iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
 			{
 				printf("touching...\n");
+				printf("x = %d, y = %d \n",iev[0].value,iev[1].value);	
 			}
 		}
 	}
