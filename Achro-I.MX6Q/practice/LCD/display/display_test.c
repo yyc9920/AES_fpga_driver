@@ -134,10 +134,13 @@ void getTouch(int *x, int *y, int start_x, int start_y, int end_x, int end_y)
 	}
 }
 
+
 int main(int argc, char *argv[])
 {
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 	int x, y;
+	int step=0;
+	struct fb_var_screeninfo orig_vinfo;
+	long int screensize = 0;
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
 		// Elements actually correspond to the ASCII chart
@@ -197,7 +200,6 @@ int main(int argc, char *argv[])
 		ascii_characters_SMALL[67] = C__10x14;
 		ascii_characters_SMALL[68] = D__10x14;
 		ascii_characters_SMALL[69] = E__10x14;
-				draw_string(500, 144, (char *)"YECHAN YUN", 10, 6, 9, 10, 2);
 		ascii_characters_SMALL[70] = F__10x14;
 		ascii_characters_SMALL[71] = G__10x14;
 		ascii_characters_SMALL[72] = H__10x14;
@@ -242,8 +244,6 @@ int main(int argc, char *argv[])
 		numbers_BIG[8] = AR8__29x24;
 		numbers_BIG[9] = AR9__29x24;
 	}
-	struct fb_var_screeninfo orig_vinfo;
-	long int screensize = 0;
 
 	// Open the framebuffer file for reading and writing
 	fbfd = open("/dev/fb0", O_RDWR);
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 
 	page_size = finfo.line_length * vinfo.yres;
 
-	// map fb to user mem
+	while(step == 0) {
 	screensize = finfo.smem_len;
 	fbp = (char *)mmap(0,
 			screensize,
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 			draw_string(850, 100, (char *)"KIDEOK KIM", 10, 6, 0, 10, 1);
 			draw_string(805, 140, (char *)"B A S S", 7, 6, 0, 10, 2);
 			draw_string(880, 200, (char *)"START", 5, 6, 9, 10, 2);
-			
+
 			// switch page
 			vinfo.yoffset = cur_page * vinfo.yres;
 			ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -363,9 +363,18 @@ int main(int argc, char *argv[])
 		printf("Error re-setting variable information.\n");
 	}
 
+
 	getTouch(&x, &y, 430, 400, 520, 460);
 	printf("After Touch\nx = %d, y = %d", x, y);
+}
+
+/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 	if(x>=430 && x<=520 && y>=400 && y<=460){
+
+			// draw...
+			//-----------------------------------------------------------graphics loop here
+
+			//	draw();
 
 		screensize = finfo.smem_len;
 		fbp = (char *)mmap(0,
@@ -380,11 +389,6 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			// draw...
-			//-----------------------------------------------------------graphics loop here
-
-			//	draw();
-
 			int fps = 60;
 			int secs = 10;
 			int xloc = 1;
@@ -396,7 +400,14 @@ int main(int argc, char *argv[])
 				clear_screen(0);
 				// clear the previous image (= fill entire screen)
 				drawline(100, 400, xloc + 222, 555);
+				draw_string(880, 40, (char *)"CHECK BALANCE", 13, 6, 9, 10, 2);
+				draw_string(880, 120, (char *)"CHECK TRANSACTION HISTORY", 25, 6, 9, 10, 2);
 				draw_string(880, 200, (char *)"SEND", 4, 6, 9, 10, 2);
+				draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+				draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+				draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+				draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+				draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 				// switch page
 				vinfo.yoffset = cur_page * vinfo.yres;
 				ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -431,6 +442,90 @@ int main(int argc, char *argv[])
 			printf("Error re-setting variable information.\n");
 		}
 	}
+
+/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+	getTouch(&x, &y, 430, 400, 520, 460);
+	printf("After Touch\nx = %d, y = %d", x, y);
+	if(x>=430 && x<=520 && y>=400 && y<=460){
+
+			// draw...
+			//-----------------------------------------------------------graphics loop here
+
+			//	draw();
+
+		screensize = finfo.smem_len;
+		fbp = (char *)mmap(0,
+				screensize,
+				PROT_READ | PROT_WRITE,
+				MAP_SHARED,
+				fbfd,
+				0);
+		if ((int)fbp == -1)
+		{
+			printf("Failed to mmap\n");
+		}
+		else
+		{
+
+			int fps = 60;
+			int secs = 10;
+			int xloc = 1;
+			int yloc = 1;
+			for (int i = 1; i < 3; i++)
+			{
+				// change page to draw to (between 0 and 1)
+				cur_page = (cur_page + 1) % 2;
+				clear_screen(0);
+				// clear the previous image (= fill entire screen)
+				drawline(100, 400, xloc + 222, 555);
+				draw_string(880, 40, (char *)"CHECK BALANCE", 13, 6, 9, 10, 2);
+				draw_string(880, 120, (char *)"CHECK TRANSACTION HISTORY", 25, 6, 9, 10, 2);
+				draw_string(880, 200, (char *)"SEND", 4, 6, 9, 10, 2);
+				draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+				draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+				draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+				draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+				draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+				// switch page
+				vinfo.yoffset = cur_page * vinfo.yres;
+				ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+				// the call to waitforvsync should use a pointer to a variable
+				// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+				// so should be in fact like this:
+				__u32 dummy = 0;
+				ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+				// also should of course check the return values of the ioctl calls...
+				if (yloc >= vinfo.yres / 2)
+					yloc = 1;
+				if (xloc >= 100)
+					yloc = 1;
+				yloc++;
+				xloc++;
+			}
+			//-----------------------------------------------------------graphics loop here
+		}
+
+		// unmap fb file from memory
+		munmap(fbp, screensize);
+		// reset cursor
+		if (kbfd >= 0)
+		{
+			ioctl(kbfd, KDSETMODE, KD_TEXT);
+			// close kb file
+			close(kbfd);
+		}
+		// reset the display mode
+		if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+		{
+			printf("Error re-setting variable information.\n");
+		}
+	}
+
+/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
 	// close fb file
 	close(fbfd);
 
