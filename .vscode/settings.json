@@ -7,7 +7,8 @@
     "files.associations": {
         "*.ino": "cpp",
         "stdio.h": "c",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "type_traits": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

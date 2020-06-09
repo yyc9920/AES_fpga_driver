@@ -5,14 +5,15 @@
 #include <fcntl.h>
 
 int main(){
-        int i;
-        unsigned char buffer[8];
+        int buffer;
         int fd = open("/dev/urandom", O_RDONLY);
-        read(fd, buffer, 8);
+        read(fd, &buffer, 1);
+		if(buffer < 0)
+			buffer = -buffer;
         //buffer now contains the random data
         close(fd);
-        for(i = 0; i < 8; ++i)
-                printf("%02X", buffer[i]);
-        printf("\n");
-        return 0;
+		printf("\n");
+		printf("%d", buffer);
+		printf("\n");
+        return buffer;
 }
