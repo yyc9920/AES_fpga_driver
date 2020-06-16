@@ -310,6 +310,12 @@ int main(int argc, char *argv[])
 	int clrcnt=0;
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
+
+	element e;
+	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
+	int tmp;
+	char tmp2[10];
+
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
 		// Elements actually correspond to the ASCII chart
@@ -636,6 +642,7 @@ int main(int argc, char *argv[])
 					break;
 				}else if(x>=430 && x<=740 && y>=90 && y<=150){
 					clrcnt = 0;
+					e.userName[0] = '\0';
 					step = MAKEACCSTEP;
 					break;
 				}else if(x>=430 && x<=850 && y>=390 && y<=460){
@@ -722,6 +729,9 @@ int main(int argc, char *argv[])
 					draw_string(1580+50, 250-50, (char *)"M", 1, 6, 9, 10, 2);
 
 					drawline(600, 280, 1480, 280);
+					drawline(600, 285, 1480, 285);
+					drawline(600, 290, 1480, 290);
+					draw_string(620, 270, e.userName, strlen(e.userName), 6, 9, 10, 2);
 
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
@@ -760,26 +770,153 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
+			if(step == MAKEACCSTEP){
 				getTouch(&x, &y);
 				if(x>=800 && x<=940 && y>=0 && y<=60){
 					clrcnt = 0;
 					step = 0;
 					break;
-				}else if(x>=430 && x<=880 && y>=240 && y<=300){
-					clrcnt = 0;
-					step = LOGACCSTEP;
-					break;
-				}else if(x>=430 && x<=740 && y>=90 && y<=150){
-					clrcnt = 0;
-					step = MAKEACCSTEP;
-					break;
+				}else if(y>=200 && y<=260){
+					if(x>=440 && x<=450){
+						if(e.userName == NULL)
+							strcpy(e.userName, "Q");
+						else
+							strcat(e.userName, "Q");
+					}else if(x>=490 && x<=500){
+						if(e.userName == NULL)
+							strcpy(e.userName, "W");
+						else
+							strcat(e.userName, "W");
+					}else if(x>=540 && x<=550){
+						if(e.userName == NULL)
+							strcpy(e.userName, "E");
+						else
+							strcat(e.userName, "E");
+					}else if(x>=590 && x<=600){
+						if(e.userName == NULL)
+							strcpy(e.userName, "R");
+						else
+							strcat(e.userName, "R");
+					}else if(x>=640 && x<=650){
+						if(e.userName == NULL)
+							strcpy(e.userName, "T");
+						else
+							strcat(e.userName, "T");
+					}else if(x>=690 && x<=700){
+						if(e.userName == NULL)
+							strcpy(e.userName, "Y");
+						else
+							strcat(e.userName, "Y");
+					}else if(x>=740 && x<=750){
+						if(e.userName == NULL)
+							strcpy(e.userName, "U");
+						else
+							strcat(e.userName, "U");
+					}else if(x>=790 && x<=800){
+						if(e.userName == NULL)
+							strcpy(e.userName, "I");
+						else
+							strcat(e.userName, "I");
+					}else if(x>=840 && x<=850){
+						if(e.userName == NULL)
+							strcpy(e.userName, "O");
+						else
+							strcat(e.userName, "O");
+					}else if(x>=890 && x<=900){
+						if(e.userName == NULL)
+							strcpy(e.userName, "P");
+						else
+							strcat(e.userName, "P");
+					}
+				}else if(y>=300 && y<=360){
+					if(x>=465 && x<=475){
+						if(e.userName == NULL)
+							strcpy(e.userName, "A");
+						else
+							strcat(e.userName, "A");
+					}else if(x>=515 && x<=525){
+						if(e.userName == NULL)
+							strcpy(e.userName, "S");
+						else
+							strcat(e.userName, "S");
+					}else if(x>=565 && x<=575){
+						if(e.userName == NULL)
+							strcpy(e.userName, "D");
+						else
+							strcat(e.userName, "D");
+					}else if(x>=615 && x<=625){
+						if(e.userName == NULL)
+							strcpy(e.userName, "F");
+						else
+							strcat(e.userName, "F");
+					}else if(x>=665 && x<=675){
+						if(e.userName == NULL)
+							strcpy(e.userName, "G");
+						else
+							strcat(e.userName, "G");
+					}else if(x>=715 && x<=725){
+						if(e.userName == NULL)
+							strcpy(e.userName, "H");
+						else
+							strcat(e.userName, "H");
+					}else if(x>=765 && x<=775){
+						if(e.userName == NULL)
+							strcpy(e.userName, "J");
+						else
+							strcat(e.userName, "J");
+					}else if(x>=815 && x<=825){
+						if(e.userName == NULL)
+							strcpy(e.userName, "K");
+						else
+							strcat(e.userName, "K");
+					}else if(x>=865 && x<=875){
+						if(e.userName == NULL)
+							strcpy(e.userName, "L");
+						else
+							strcat(e.userName, "L");
+					}
+				}else if(y>=400 && y<=460){
+					if(x>=515 && x<=525){
+						if(e.userName == NULL)
+							strcpy(e.userName, "Z");
+						else
+							strcat(e.userName, "Z");
+					}else if(x>=565 && x<=575){
+						if(e.userName == NULL)
+							strcpy(e.userName, "X");
+						else
+							strcat(e.userName, "X");
+					}else if(x>=615 && x<=625){
+						if(e.userName == NULL)
+							strcpy(e.userName, "C");
+						else
+							strcat(e.userName, "V");
+					}else if(x>=665 && x<=675){
+						if(e.userName == NULL)
+							strcpy(e.userName, "B");
+						else
+							strcat(e.userName, "B");
+					}else if(x>=715 && x<=725){
+						if(e.userName == NULL)
+							strcpy(e.userName, "N");
+						else
+							strcat(e.userName, "N");
+					}else if(x>=765 && x<=775){
+						if(e.userName == NULL)
+							strcpy(e.userName, "N");
+						else
+							strcat(e.userName, "N");
+					}else if(x>=815 && x<=825){
+						if(e.userName == NULL)
+							strcpy(e.userName, "M");
+						else
+							strcat(e.userName, "M");
+					}
 				}else if(x>=430 && x<=850 && y>=390 && y<=460){
 					clrcnt = 0;
 					step = DELACCSTEP;
 					break;
 				}
-
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
 			

@@ -200,6 +200,10 @@ void main()
             printf("\n\t[계좌 끝]\n");
             break;
         case 2:
+			if(e.userName == NULL)
+				printf("\n NULL");
+			else
+				printf("\n No NULL");
             printf("\n[이름 입력] 이름을 입력하시오 : ");
             scanf("%s", e.userName);
             tmp = system("./prng");
