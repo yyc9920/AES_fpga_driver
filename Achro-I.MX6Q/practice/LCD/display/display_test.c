@@ -80,160 +80,162 @@
 
 typedef struct
 {
-    char transName[MAX_WORD_LENGTH];
-    int money;
+	char transName[MAX_WORD_LENGTH];
+	int money;
 } transInfo;
 
 typedef struct
 {
-    char accountNum[MAX_WORD_LENGTH];
-    char userName[MAX_WORD_LENGTH];
-    transInfo *transinfo[10]; //TODO : Segmantation fault ?—?Ÿ¬ ê³ ì¹˜ê¸?
+	char accountNum[MAX_WORD_LENGTH];
+	char userName[MAX_WORD_LENGTH];
+	transInfo *transinfo[10]; //TODO : Segmantation fault ?—?Ÿ¬ ê³ ì¹˜ê¸?
 	char passwd[5];
-    int randNum;
-    int otp_Num;
-    int money;
-    int transCnt;
+	int randNum;
+	int otp_Num;
+	int money;
+	int transCnt;
 } element;
 
 typedef struct treeNode
 {
-    element key;
-    struct treeNode *left;
-    struct treeNode *right;
+	element key;
+	struct treeNode *left;
+	struct treeNode *right;
 } treeNode;
 
 // ?¬?¸?„° pê°? ê°?ë¦¬í‚¤?Š” ?…¸?“œ??? ë¹„êµ?•˜?—¬ ?•­ëª? keyë¥? ?‚½?ž…?•˜?Š” ?—°?‚°
 treeNode *insertKey(treeNode *p, element key)
 {
-    treeNode *newNode;
-    int compare;
+	treeNode *newNode;
+	int compare;
 
-    // ?‚½?ž…?•  ?žë¦¬ì— ?ƒˆ ?…¸?“œë¥? êµ¬ì„±?•˜?—¬ ?—°ê²?
-    if (p == NULL)
-    {
-        newNode = (treeNode *)malloc(sizeof(treeNode));
-        newNode->key = key;
-        newNode->left = NULL;
-        newNode->right = NULL;
-        return newNode;
-    }
-    // ?´ì§? ?Š¸ë¦¬ì—?„œ ?‚½?ž…?•  ?žë¦? ?ƒ?ƒ‰
-    else
-    {
-        compare = strcmp(key.accountNum, p->key.accountNum);
-        if (compare < 0)
-            p->left = insertKey(p->left, key);
-        else if (compare > 0)
-            p->right = insertKey(p->right, key);
-        else
-            printf("\n ?´ë¯? ê°™ì?? ë²ˆí˜¸ë¡? ?“±ë¡ëœ ê³„ì¢Œê°? ?žˆ?Šµ?‹ˆ?‹¤. \n");
+	// ?‚½?ž…?•  ?žë¦¬ì— ?ƒˆ ?…¸?“œë¥? êµ¬ì„±?•˜?—¬ ?—°ê²?
+	if (p == NULL)
+	{
+		newNode = (treeNode *)malloc(sizeof(treeNode));
+		newNode->key = key;
+		newNode->left = NULL;
+		newNode->right = NULL;
+		return newNode;
+	}
+	// ?´ì§? ?Š¸ë¦¬ì—?„œ ?‚½?ž…?•  ?žë¦? ?ƒ?ƒ‰
+	else
+	{
+		compare = strcmp(key.accountNum, p->key.accountNum);
+		if (compare < 0)
+			p->left = insertKey(p->left, key);
+		else if (compare > 0)
+			p->right = insertKey(p->right, key);
+		else
+			printf("\n ?´ë¯? ê°™ì?? ë²ˆí˜¸ë¡? ?“±ë¡ëœ ê³„ì¢Œê°? ?žˆ?Šµ?‹ˆ?‹¤. \n");
 
-        return p; // ?‚½?ž…?•œ ?žë¦? ë°˜í™˜
-    }
+		return p; // ?‚½?ž…?•œ ?žë¦? ë°˜í™˜
+	}
 }
 
 void insert(treeNode **root, element key)
 {
-    *root = insertKey(*root, key);
+	*root = insertKey(*root, key);
 }
 
 // root ?…¸?“œë¶??„° ?ƒ?ƒ‰?•˜?—¬ key??? ê°™ì?? ?…¸?“œë¥? ì°¾ì•„ ?‚­? œ?•˜?Š” ?—°?‚°
 void deleteNode(treeNode *root, element key)
 {
-    treeNode *parent, *p, *succ, *succ_parent;
-    treeNode *child;
-    parent = NULL;
-    p = root;
-    while ((p != NULL) && (strcmp(p->key.accountNum, key.accountNum) != 0))
-    {
-        parent = p;
-        if (strcmp(key.accountNum, p->key.accountNum) < 0)
-            p = p->left;
-        else
-            p = p->right;
-    }
-    // ?‚­? œ?•  ?…¸?“œê°? ?—†?Š” ê²½ìš°
-    if (p == NULL)
-    {
-        printf("\n ?‚­? œ?•  ê³„ì¢Œê°? ?“±ë¡ë˜?–´ ?žˆì§? ?•Š?Šµ?‹ˆ?‹¤. \n");
-        return;
-    }
-    // ?‚­? œ?•  ?…¸?“œê°? ?‹¨ë§? ?…¸?“œ?¸ ê²½ìš°
-    if ((p->left == NULL) && (p->right == NULL))
-    {
-        if (parent != NULL)
-        {
-            if (parent->left == p)
-                parent->left = NULL;
-            else
-                parent->right = NULL;
-        }
-        else
-            root = NULL;
-    }
-    // ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?•œ ê°? ê°?ì§? ê²½ìš°
-    else if ((p->left == NULL) || (p->right == NULL))
-    {
-        if (p->left != NULL)
-            child = p->left;
-        else
-            child = p->right;
-        if (parent != NULL)
-        {
-            if (parent->left == p)
-                parent->left = child;
-            else
-                parent->right = child;
-        }
-        else
-            root = child;
-    }
-    // ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?‘ ê°? ê°?ì§? ê²½ìš°
-    else
-    {
-        succ_parent = p;
-        succ = p->right;
-        while (succ->left != NULL)
-        {
-            succ_parent = succ;
-            succ = succ->left;
-        }
-        if (succ_parent->left == succ)
-            succ_parent->left = succ->right;
-        else
-            succ_parent->right = succ->right;
-        p->key = succ->key;
-        p = succ;
-    }
-    free(p);
+	treeNode *parent, *p, *succ, *succ_parent;
+	treeNode *child;
+	parent = NULL;
+	p = root;
+	while ((p != NULL) && (strcmp(p->key.accountNum, key.accountNum) != 0))
+	{
+		parent = p;
+		if (strcmp(key.accountNum, p->key.accountNum) < 0)
+			p = p->left;
+		else
+			p = p->right;
+	}
+	// ?‚­? œ?•  ?…¸?“œê°? ?—†?Š” ê²½ìš°
+	if (p == NULL)
+	{
+		printf("\n ?‚­? œ?•  ê³„ì¢Œê°? ?“±ë¡ë˜?–´ ?žˆì§? ?•Š?Šµ?‹ˆ?‹¤. \n");
+		return;
+	}
+	// ?‚­? œ?•  ?…¸?“œê°? ?‹¨ë§? ?…¸?“œ?¸ ê²½ìš°
+	if ((p->left == NULL) && (p->right == NULL))
+	{
+		if (parent != NULL)
+		{
+			if (parent->left == p)
+				parent->left = NULL;
+			else
+				parent->right = NULL;
+		}
+		else
+			root = NULL;
+	}
+	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?•œ ê°? ê°?ì§? ê²½ìš°
+	else if ((p->left == NULL) || (p->right == NULL))
+	{
+		if (p->left != NULL)
+			child = p->left;
+		else
+			child = p->right;
+		if (parent != NULL)
+		{
+			if (parent->left == p)
+				parent->left = child;
+			else
+				parent->right = child;
+		}
+		else
+			root = child;
+	}
+	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?‘ ê°? ê°?ì§? ê²½ìš°
+	else
+	{
+		succ_parent = p;
+		succ = p->right;
+		while (succ->left != NULL)
+		{
+			succ_parent = succ;
+			succ = succ->left;
+		}
+		if (succ_parent->left == succ)
+			succ_parent->left = succ->right;
+		else
+			succ_parent->right = succ->right;
+		p->key = succ->key;
+		p = succ;
+	}
+	free(p);
 }
 
 // ?´ì§? ?ƒ?ƒ‰ ?Š¸ë¦¬ì—?„œ ?‚¤ê°’ì´ key?¸ ?…¸?“œ ?œ„ì¹˜ë?? ?ƒ?ƒ‰?•˜?Š” ?—°?‚°
 treeNode *searchBST(treeNode *root, element key)
 {
-    treeNode *p;
-    int compare;
-    p = root;
-    while (p != NULL)
-    {
-        compare = strcmp(key.accountNum, p->key.accountNum);
-        if (compare < 0)
-            p = p->left;
-        else if (compare > 0)
-            p = p->right;
-        else
-        {
-            printf("\nì°¾ì?? ê³„ì¢Œ : %s", p->key.accountNum);
-            return p;
-        }
-    }
-    return p;
+	treeNode *p;
+	int compare;
+	p = root;
+	while (p != NULL)
+	{
+		compare = strcmp(key.accountNum, p->key.accountNum);
+		if (compare < 0)
+			p = p->left;
+		else if (compare > 0)
+			p = p->right;
+		else
+		{
+			printf("\nì°¾ì?? ê³„ì¢Œ : %s", p->key.accountNum);
+			return p;
+		}
+	}
+	return p;
 }
 
 /********Data Structure Define Ends Here*********/
 
 int step = 0;
+
+int x, y;
 
 int gtcnt = 0;
 
@@ -248,53 +250,65 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-void getTouch(int *x, int *y)
+void getTouch(void *data)
 {
-	int fd, ret,i;
+	pid_t pid;	   // process id
+	pthread_t tid; // thread id
+
+	pid = getpid();
+	tid = pthread_self();
+
+	char *thread_name = (char *)data;
+
+	int fd, ret, i;
 	int cnt = 0;
 	pid_t pid;
-	const char* evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
+	const char *evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
 	// TODO : Find this file in host PC.
 	struct input_event iev[3];
 	fd = open(evdev_path, O_RDONLY);
-	if(fd < 0) {
+	if (fd < 0)
+	{
 		perror("error: could not open evdev");
 		return;
 	}
 
 	pid = fork();
-	if(pid>0){
+	if (pid > 0)
+	{
 		printf("parents is alive\n");
 		printf("parent process is %d\n", getpid());
 		sleep(50);
 	}
-	else if(pid == 0){//0 = children pross
+	else if (pid == 0)
+	{ //0 = children pross
 		printf("child process\n");
 		printf("child process is %d\n", getpid());
 
-		while(1)
+		while (1)
 		{
-			ret = read(fd, iev, sizeof(struct input_event)*3);
-			if(ret < 0) {
+			ret = read(fd, iev, sizeof(struct input_event) * 3);
+			if (ret < 0)
+			{
 				printf("error: could not read input event\n");
 				perror("error: could not read input event");
 				break;
 			}
 
-			if(iev[0].type == 1 && iev[1].type == 3 && iev[2].type == 3)
+			if (iev[0].type == 1 && iev[1].type == 3 && iev[2].type == 3)
 			{
 				printf("touch!!!!\n");
-				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
-				*x = iev[1].value;
-				*y = iev[2].value;
+				printf("x = %d, y = %d \n", iev[1].value, iev[2].value);
+				x = iev[1].value;
+				y = iev[2].value;
 				break;
 			}
-			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
+			else if (iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
 				printf("hands off!!!\n");
 			}
-			else if(iev[0].type == 0 && iev[1].type == 3 && iev[2].type == 0 ||\
-					iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
+			else if (iev[0].type == 0 && iev[1].type == 3 && iev[2].type == 0 ||
+					 iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
 			{
 				printf("touching...\n");
 			}
@@ -307,11 +321,9 @@ void getTouch(int *x, int *y)
 	}
 }
 
-
 int main(int argc, char *argv[])
 {
-	int x, y;
-	int clrcnt=0;
+	int clrcnt = 0;
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
 
@@ -319,6 +331,16 @@ int main(int argc, char *argv[])
 	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
 	int tmp;
 	char tmp2[10];
+
+	sleep(1);
+
+	thr_id = pthread_create(&p_thread[0], NULL, getTouch, (void *)p1);
+
+	if (thr_id < 0)
+	{
+		perror("thread create error : ");
+		exit(0);
+	}
 
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -472,15 +494,18 @@ int main(int argc, char *argv[])
 
 	page_size = finfo.line_length * vinfo.yres;
 
-	while(1) {
-		if(step == 0){
+	while (1)
+	{
+
+		if (step == 0)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -544,10 +569,13 @@ int main(int argc, char *argv[])
 			}
 
 			//step forwarwd to  step 1
-			while(1){
-				getTouch(&x, &y);
-				if(x>=430 && x<=520 && y>=400 && y<=460){
+			while (1)
+			{
+				if (x >= 430 && x <= 520 && y >= 400 && y <= 460)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = LOGINSTEP;
 					break;
 				}
@@ -561,14 +589,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == LOGINSTEP) {
+		if (step == LOGINSTEP)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -584,7 +613,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
@@ -631,49 +660,63 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = 0;
 					break;
-				}else if(x>=430 && x<=880 && y>=240 && y<=300){
+				}
+				else if (x >= 430 && x <= 880 && y >= 240 && y <= 300)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					e.accountNum[0] = '\0';
 					temp = NULL;
 					step = LOGACCSTEP;
 					break;
-				}else if(x>=430 && x<=740 && y>=90 && y<=150){
+				}
+				else if (x >= 430 && x <= 740 && y >= 90 && y <= 150)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					e.userName[0] = '\0';
 					step = MAKEACCSTEP;
 					break;
-				}else if(x>=430 && x<=850 && y>=390 && y<=460){
+				}
+				else if (x >= 430 && x <= 850 && y >= 390 && y <= 460)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = DELACCSTEP;
 					break;
 				}
-
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
-/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
 		// draw...
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == LOGACCSTEP) {
+		if (step == LOGACCSTEP)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -689,7 +732,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
@@ -706,7 +749,6 @@ int main(int argc, char *argv[])
 					drawline(600, 292, 1480, 292);
 					drawline(600, 293, 1480, 293);
 					draw_string(620, 255, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
-					
 
 					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
 					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
@@ -748,80 +790,129 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			if(step == LOGACCSTEP){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+			if (step == LOGACCSTEP)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = 0;
-				}else if(y>=100-5 && y<=165){
-					if(x>=150-5 && x<=160+5){
-						if(e.accountNum == NULL)
+				}
+				else if (y >= 100 - 5 && y <= 165)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "1");
 						else
 							strcat(e.accountNum, "1");
-					}else if(x>=200-5 && x<=210+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "2");
 						else
 							strcat(e.accountNum, "2");
-					}else if(x>=250-5 && x<=260+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "3");
 						else
 							strcat(e.accountNum, "3");
+						x = 0;
+						y = 0;
 					}
-				}else if(y>=200-5 && y<=265){
-					if(x>=150-5 && x<=160+5){
-						if(e.accountNum == NULL)
+				}
+				else if (y >= 200 - 5 && y <= 265)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "4");
 						else
 							strcat(e.accountNum, "4");
-					}else if(x>=200-5 && x<=210+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "5");
 						else
 							strcat(e.accountNum, "5");
-					}else if(x>=250-5 && x<=260+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "6");
 						else
 							strcat(e.accountNum, "6");
+						x = 0;
+						y = 0;
 					}
-				}else if(y>=300-5 && y<=365){
-					if(x>=150-5 && x<=160+5){
-						if(e.accountNum == NULL)
+				}
+				else if (y >= 300 - 5 && y <= 365)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "7");
 						else
 							strcat(e.accountNum, "7");
-					}else if(x>=200-5 && x<=210+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "8");
 						else
 							strcat(e.accountNum, "8");
-					}else if(x>=250-5 && x<=260+5){
-						if(e.accountNum == NULL)
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "9");
 						else
 							strcat(e.accountNum, "9");
+						x = 0;
+						y = 0;
 					}
-				}else if(x>=200-5 && x<=210+5 && y>=400-5 && y<=465){
-					if(e.accountNum == NULL)
+				}
+				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				{
+					if (e.accountNum == NULL)
 						strcpy(e.accountNum, "0");
 					else
 						strcat(e.accountNum, "0");
-				}else if(x>=430 && x<=520 && y>=240-5 && y<=300+5){
+					x = 0;
+					y = 0;
+				}
+				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
+				{
 					clrcnt = 0;
+					x = 0;
+					y = 0;
 					temp = searchBST(root, e);
-					if(temp != NULL){
+					if (temp != NULL)
+					{
 						printf("\n%s", temp->key.userName);
 						printf("\n%s", temp->key.accountNum);
 					}
 					step = MAKEACCSTEP;
 				}
-
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -831,14 +922,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == MAKEACCSTEP) {
+		if (step == MAKEACCSTEP)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -854,7 +946,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(600, 10, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
@@ -864,34 +956,34 @@ int main(int argc, char *argv[])
 					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
 					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
 
-					draw_string(880, 150-50, (char *)"Q", 1, 6, 9, 10, 2);
-					draw_string(980, 150-50, (char *)"W", 1, 6, 9, 10, 2);
-					draw_string(1080, 150-50, (char *)"E", 1, 6, 9, 10, 2);
-					draw_string(1180, 150-50, (char *)"R", 1, 6, 9, 10, 2);
-					draw_string(1280, 150-50, (char *)"T", 1, 6, 9, 10, 2);
-					draw_string(1380, 150-50, (char *)"Y", 1, 6, 9, 10, 2);
-					draw_string(1480, 150-50, (char *)"U", 1, 6, 9, 10, 2);
-					draw_string(1580, 150-50, (char *)"I", 1, 6, 9, 10, 2);
-					draw_string(1680, 150-50, (char *)"O", 1, 6, 9, 10, 2);
-					draw_string(1780, 150-50, (char *)"P", 1, 6, 9, 10, 2);
+					draw_string(880, 150 - 50, (char *)"Q", 1, 6, 9, 10, 2);
+					draw_string(980, 150 - 50, (char *)"W", 1, 6, 9, 10, 2);
+					draw_string(1080, 150 - 50, (char *)"E", 1, 6, 9, 10, 2);
+					draw_string(1180, 150 - 50, (char *)"R", 1, 6, 9, 10, 2);
+					draw_string(1280, 150 - 50, (char *)"T", 1, 6, 9, 10, 2);
+					draw_string(1380, 150 - 50, (char *)"Y", 1, 6, 9, 10, 2);
+					draw_string(1480, 150 - 50, (char *)"U", 1, 6, 9, 10, 2);
+					draw_string(1580, 150 - 50, (char *)"I", 1, 6, 9, 10, 2);
+					draw_string(1680, 150 - 50, (char *)"O", 1, 6, 9, 10, 2);
+					draw_string(1780, 150 - 50, (char *)"P", 1, 6, 9, 10, 2);
 
-					draw_string(880+50, 200-50, (char *)"A", 1, 6, 9, 10, 2);
-					draw_string(980+50, 200-50, (char *)"S", 1, 6, 9, 10, 2);
-					draw_string(1080+50, 200-50, (char *)"D", 1, 6, 9, 10, 2);
-					draw_string(1180+50, 200-50, (char *)"F", 1, 6, 9, 10, 2);
-					draw_string(1280+50, 200-50, (char *)"G", 1, 6, 9, 10, 2);
-					draw_string(1380+50, 200-50, (char *)"H", 1, 6, 9, 10, 2);
-					draw_string(1480+50, 200-50, (char *)"J", 1, 6, 9, 10, 2);
-					draw_string(1580+50, 200-50, (char *)"K", 1, 6, 9, 10, 2);
-					draw_string(1680+50, 200-50, (char *)"L", 1, 6, 9, 10, 2);
+					draw_string(880 + 50, 200 - 50, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(980 + 50, 200 - 50, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(1080 + 50, 200 - 50, (char *)"D", 1, 6, 9, 10, 2);
+					draw_string(1180 + 50, 200 - 50, (char *)"F", 1, 6, 9, 10, 2);
+					draw_string(1280 + 50, 200 - 50, (char *)"G", 1, 6, 9, 10, 2);
+					draw_string(1380 + 50, 200 - 50, (char *)"H", 1, 6, 9, 10, 2);
+					draw_string(1480 + 50, 200 - 50, (char *)"J", 1, 6, 9, 10, 2);
+					draw_string(1580 + 50, 200 - 50, (char *)"K", 1, 6, 9, 10, 2);
+					draw_string(1680 + 50, 200 - 50, (char *)"L", 1, 6, 9, 10, 2);
 
-					draw_string(980+50, 250-50, (char *)"Z", 1, 6, 9, 10, 2);
-					draw_string(1080+50, 250-50, (char *)"X", 1, 6, 9, 10, 2);
-					draw_string(1180+50, 250-50, (char *)"C", 1, 6, 9, 10, 2);
-					draw_string(1280+50, 250-50, (char *)"V", 1, 6, 9, 10, 2);
-					draw_string(1380+50, 250-50, (char *)"B", 1, 6, 9, 10, 2);
-					draw_string(1480+50, 250-50, (char *)"N", 1, 6, 9, 10, 2);
-					draw_string(1580+50, 250-50, (char *)"M", 1, 6, 9, 10, 2);
+					draw_string(980 + 50, 250 - 50, (char *)"Z", 1, 6, 9, 10, 2);
+					draw_string(1080 + 50, 250 - 50, (char *)"X", 1, 6, 9, 10, 2);
+					draw_string(1180 + 50, 250 - 50, (char *)"C", 1, 6, 9, 10, 2);
+					draw_string(1280 + 50, 250 - 50, (char *)"V", 1, 6, 9, 10, 2);
+					draw_string(1380 + 50, 250 - 50, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(1480 + 50, 250 - 50, (char *)"N", 1, 6, 9, 10, 2);
+					draw_string(1580 + 50, 250 - 50, (char *)"M", 1, 6, 9, 10, 2);
 
 					drawline(600, 290, 1480, 290);
 					drawline(600, 291, 1480, 291);
@@ -936,148 +1028,233 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			if(step == MAKEACCSTEP){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
+			if (step == MAKEACCSTEP)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
+					clrcnt = 0;x=0;
+					y=0;
 					step = 0;
-				}else if(y>=200-5 && y<=260+5){
-					if(x>=435 && x<=455){
-						if(e.userName == NULL)
+				}
+				else if (y >= 200 - 5 && y <= 260 + 5)
+				{
+					if (x >= 435 && x <= 455)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "Q");
 						else
-							strcat(e.userName, "Q");
-					}else if(x>=490-5 && x<=500+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "Q");x=0;
+					y=0;
+					}
+					else if (x >= 490 - 5 && x <= 500 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "W");
 						else
-							strcat(e.userName, "W");
-					}else if(x>=540-5 && x<=550+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "W");x=0;
+					y=0;
+					}
+					else if (x >= 540 - 5 && x <= 550 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "E");
 						else
-							strcat(e.userName, "E");
-					}else if(x>=590-5 && x<=600+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "E");x=0;
+					y=0;
+					}
+					else if (x >= 590 - 5 && x <= 600 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "R");
 						else
-							strcat(e.userName, "R");
-					}else if(x>=640-5 && x<=650+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "R");x=0;
+					y=0;
+					}
+					else if (x >= 640 - 5 && x <= 650 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "T");
 						else
-							strcat(e.userName, "T");
-					}else if(x>=690-5 && x<=700+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "T");x=0;
+					y=0;
+					}
+					else if (x >= 690 - 5 && x <= 700 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "Y");
 						else
-							strcat(e.userName, "Y");
-					}else if(x>=740-5 && x<=750+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "Y");x=0;
+					y=0;
+					}
+					else if (x >= 740 - 5 && x <= 750 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "U");
 						else
-							strcat(e.userName, "U");
-					}else if(x>=790-5 && x<=800+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "U");x=0;
+					y=0;
+					}
+					else if (x >= 790 - 5 && x <= 800 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "I");
 						else
-							strcat(e.userName, "I");
-					}else if(x>=840-5 && x<=850+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "I");x=0;
+					y=0;
+					}
+					else if (x >= 840 - 5 && x <= 850 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "O");
 						else
-							strcat(e.userName, "O");
-					}else if(x>=890-5 && x<=900+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "O");x=0;
+					y=0;
+					}
+					else if (x >= 890 - 5 && x <= 900 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "P");
 						else
-							strcat(e.userName, "P");
+							strcat(e.userName, "P");x=0;
+					y=0;
 					}
-				}else if(y>=300-5 && y<=360+5){
-					if(x>=465-5 && x<=475+5){
-						if(e.userName == NULL)
+				}
+				else if (y >= 300 - 5 && y <= 360 + 5)
+				{
+					if (x >= 465 - 5 && x <= 475 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "A");
 						else
-							strcat(e.userName, "A");
-					}else if(x>=515-5 && x<=525+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "A");x=0;
+					y=0;
+					}
+					else if (x >= 515 - 5 && x <= 525 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "S");
 						else
-							strcat(e.userName, "S");
-					}else if(x>=565-5 && x<=575+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "S");x=0;
+					y=0;
+					}
+					else if (x >= 565 - 5 && x <= 575 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "D");
 						else
-							strcat(e.userName, "D");
-					}else if(x>=615-5 && x<=625+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "D");x=0;
+					y=0;
+					}
+					else if (x >= 615 - 5 && x <= 625 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "F");
 						else
-							strcat(e.userName, "F");
-					}else if(x>=665-5 && x<=675+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "F");x=0;
+					y=0;
+					}
+					else if (x >= 665 - 5 && x <= 675 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "G");
 						else
-							strcat(e.userName, "G");
-					}else if(x>=715-5 && x<=725+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "G");x=0;
+					y=0;
+					}
+					else if (x >= 715 - 5 && x <= 725 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "H");
 						else
-							strcat(e.userName, "H");
-					}else if(x>=765-5 && x<=775+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "H");x=0;
+					y=0;
+					}
+					else if (x >= 765 - 5 && x <= 775 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "J");
 						else
-							strcat(e.userName, "J");
-					}else if(x>=815-5 && x<=825+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "J");x=0;
+					y=0;
+					}
+					else if (x >= 815 - 5 && x <= 825 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "K");
 						else
-							strcat(e.userName, "K");
-					}else if(x>=865-5 && x<=875+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "K");x=0;
+					y=0;
+					}
+					else if (x >= 865 - 5 && x <= 875 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "L");
 						else
-							strcat(e.userName, "L");
+							strcat(e.userName, "L");x=0;
+					y=0;
 					}
-				}else if(y>=400-5 && y<=460+5){
-					if(x>=515-5 && x<=525){
-						if(e.userName == NULL)
+				}
+				else if (y >= 400 - 5 && y <= 460 + 5)
+				{
+					if (x >= 515 - 5 && x <= 525)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "Z");
 						else
-							strcat(e.userName, "Z");
-					}else if(x>=565-5 && x<=575+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "Z");x=0;
+					y=0;
+					}
+					else if (x >= 565 - 5 && x <= 575 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "X");
 						else
-							strcat(e.userName, "X");
-					}else if(x>=615-5 && x<=625+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "X");x=0;
+					y=0;
+					}
+					else if (x >= 615 - 5 && x <= 625 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "C");
 						else
-							strcat(e.userName, "C");
-					}else if(x>=665-5 && x<=675+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "C");x=0;
+					y=0;
+					}
+					else if (x >= 665 - 5 && x <= 675 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "V");
 						else
-							strcat(e.userName, "V");
-					}else if(x>=715-5 && x<=725+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "V");x=0;
+					y=0;
+					}
+					else if (x >= 715 - 5 && x <= 725 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "B");
 						else
-							strcat(e.userName, "B");
-					}else if(x>=765-5 && x<=775+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "B");x=0;
+					y=0;
+					}
+					else if (x >= 765 - 5 && x <= 775 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "N");
 						else
-							strcat(e.userName, "N");
-					}else if(x>=815-5 && x<=825+5){
-						if(e.userName == NULL)
+							strcat(e.userName, "N");x=0;
+					y=0;
+					}
+					else if (x >= 815 - 5 && x <= 825 + 5)
+					{
+						if (e.userName == NULL)
 							strcpy(e.userName, "M");
 						else
-							strcat(e.userName, "M");
+							strcat(e.userName, "M");x=0;
+					y=0;
 					}
-				}else if(x>=540 && x<=820 && y>=100 && y<=150){
+				}
+				else if (x >= 540 && x <= 820 && y >= 100 && y <= 150)
+				{
 					tmp = system("./prng");
 					sprintf(e.accountNum, "%d", tmp);
 					tmp = system("./prng");
@@ -1087,16 +1264,17 @@ int main(int argc, char *argv[])
 					e.transCnt = 0;
 					tmp = system("./prng");
 					sprintf(e.passwd, "%d", tmp);
-					for(int i = 0; i<10; i++){
+					for (int i = 0; i < 10; i++)
+					{
 						e.transinfo[i] = (transInfo *)malloc(sizeof(transInfo));
 					}
 					insert(&root, e);
-					clrcnt = 0;
+					clrcnt = 0;x=0;
+					y=0;
 					step = SHOWACCINFOSTEP;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1106,14 +1284,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == SHOWACCINFOSTEP) {
+		if (step == SHOWACCINFOSTEP)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -1129,7 +1308,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"ACCOUNT NUMBER", 14, 6, 9, 10, 2);
@@ -1177,16 +1356,18 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 0;
 					break;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1196,14 +1377,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == 1) {
+		if (step == 1)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -1219,7 +1401,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"CHECK BALANCE", 13, 6, 9, 10, 2);
@@ -1266,27 +1448,36 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
-				getTouch(&x, &y);if(x>=800 && x<=940 && y>=0 && y<=60){
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 0;
 				}
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 0;
 					break;
-				}else if(x>=430 && x<=520 && y>=390 && y<=460){
+				}
+				else if (x >= 430 && x <= 520 && y >= 390 && y <= 460)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 4;
 					break;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
-
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1294,14 +1485,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == 4) {
+		if (step == 4)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -1317,7 +1509,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
@@ -1371,16 +1563,18 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 0;
 					break;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1391,14 +1585,15 @@ int main(int argc, char *argv[])
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if(step == 3) {
+		if (step == 3)
+		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
-					screensize,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED,
-					fbfd,
-					0);
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
@@ -1414,7 +1609,7 @@ int main(int argc, char *argv[])
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if(clrcnt == 0)
+					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(500, 20, (char *)"CHECK TRANSACTION HISTORY", 25, 6, 9, 10, 2);
@@ -1425,10 +1620,12 @@ int main(int argc, char *argv[])
 					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
 					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
 					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
-					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+					if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+					{
+						clrcnt = 0;
+						step = 0;
+					}
 					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
 					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
 					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
@@ -1471,26 +1668,25 @@ int main(int argc, char *argv[])
 			}
 
 			//step backwarwd to step 0
-			while(1){
-				getTouch(&x, &y);
-				if(x>=800 && x<=940 && y>=0 && y<=60){
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
 					clrcnt = 0;
+					x=0;
+					y=0;
 					step = 0;
 					break;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
-			
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
-
 	}
-
 
 	// close fb file
 	close(fbfd);
 
 	return 0;
 }
-

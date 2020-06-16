@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -7,10 +8,12 @@
 #include <linux/input.h>
 #include <signal.h>
 
-int main()
+char* main()
 {
 	int fd, ret,i;
-	int x, y;
+	int cor[2];
+	char rtnstr[10];
+	char tmp[5];
 	int cnt = 0;
 	pid_t pid;
 	const char* evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
@@ -45,6 +48,8 @@ int main()
 			{
 				printf("touch!!!!\n");
 				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
+				x = iev[1].value;
+				y = iev[2].value;
 			}
 			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -62,10 +67,16 @@ int main()
 		printf("can't fork, erro\n");
 		exit(0);
 	}
+
+	sprintf(rtnstr, "%d", x);
+	sprintf(tmp, "%d", y);
+	strcat(rtnstr, "p");
+	strcat(rtnstr, tmp);
+
 	kill(pid,SIGINT);
 	close(fd);
 
-	return 0;
+	return rtnstr;
 
 
 
