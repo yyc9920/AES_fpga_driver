@@ -922,7 +922,7 @@ int main(int argc, char *argv[])
 					sprintf(tmp2, "%d", tmp);
 					strcat(e.accountNum, tmp2);
 					e.money = 500000;
-					e.transcnt = 0;
+					e.transCnt = 0;
 					tmp = system("./prng");
 					sprintf(e.passwd, "%d", tmp);
 					for(int i = 0; i<10; i++){
@@ -931,7 +931,6 @@ int main(int argc, char *argv[])
 					insert(&root, e);
 					clrcnt = 0;
 					step = SHOWACCINFOSTEP;
-					break;
 				}
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
@@ -976,8 +975,8 @@ int main(int argc, char *argv[])
 					drawline(100, 400, xloc + 222, 555);
 					draw_string(880, 40, (char *)"ACCOUNT NUMBER", 14, 6, 9, 10, 2);
 					draw_string(880, 80, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
-					draw_string(880, 120, (char *)"PASSWORD", 8, 6, 9, 10, 2);
-					draw_string(880, 160, e.passwd, strlen(e.passwd), 6, 9, 10, 2);
+					draw_string(880, 140, (char *)"PASSWORD", 8, 6, 9, 10, 2);
+					draw_string(880, 180, e.passwd, strlen(e.passwd), 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
@@ -1025,21 +1024,7 @@ int main(int argc, char *argv[])
 					clrcnt = 0;
 					step = 0;
 					break;
-				}else if(x>=430 && x<=880 && y>=240 && y<=300){
-					clrcnt = 0;
-					step = LOGACCSTEP;
-					break;
-				}else if(x>=430 && x<=740 && y>=90 && y<=150){
-					clrcnt = 0;
-					e.userName[0] = '\0';
-					step = MAKEACCSTEP;
-					break;
-				}else if(x>=430 && x<=850 && y>=390 && y<=460){
-					clrcnt = 0;
-					step = DELACCSTEP;
-					break;
 				}
-
 			}
 			printf("After Touch\nx = %d, y = %d", x, y);
 			
