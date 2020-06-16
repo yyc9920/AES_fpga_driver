@@ -685,7 +685,7 @@ int main(int argc, char *argv[])
 					if(clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
-					draw_string(880, 40, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
+					draw_string(600, 10, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
 					draw_string(880, 100, (char *)"ENTER YOUR NAME", 15, 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
@@ -693,15 +693,33 @@ int main(int argc, char *argv[])
 					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
 
 					draw_string(880, 150, (char *)"Q", 1, 6, 9, 10, 2);
-					draw_string(960, 150, (char *)"W", 1, 6, 9, 10, 2);
-					draw_string(1040, 150, (char *)"E", 1, 6, 9, 10, 2);
-					draw_string(1120, 150, (char *)"R", 1, 6, 9, 10, 2);
-					draw_string(1200, 150, (char *)"T", 1, 6, 9, 10, 2);
-					draw_string(1280, 150, (char *)"Y", 1, 6, 9, 10, 2);
-					draw_string(1360, 150, (char *)"U", 1, 6, 9, 10, 2);
-					draw_string(1440, 150, (char *)"I", 1, 6, 9, 10, 2);
-					draw_string(1520, 150, (char *)"O", 1, 6, 9, 10, 2);
-					draw_string(1600, 150, (char *)"P", 1, 6, 9, 10, 2);
+					draw_string(980, 150, (char *)"W", 1, 6, 9, 10, 2);
+					draw_string(1080, 150, (char *)"E", 1, 6, 9, 10, 2);
+					draw_string(1180, 150, (char *)"R", 1, 6, 9, 10, 2);
+					draw_string(1280, 150, (char *)"T", 1, 6, 9, 10, 2);
+					draw_string(1380, 150, (char *)"Y", 1, 6, 9, 10, 2);
+					draw_string(1480, 150, (char *)"U", 1, 6, 9, 10, 2);
+					draw_string(1580, 150, (char *)"I", 1, 6, 9, 10, 2);
+					draw_string(1680, 150, (char *)"O", 1, 6, 9, 10, 2);
+					draw_string(1780, 150, (char *)"P", 1, 6, 9, 10, 2);
+
+					draw_string(880+50, 200, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(980+50, 200, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(1080+50, 200, (char *)"D", 1, 6, 9, 10, 2);
+					draw_string(1180+50, 200, (char *)"F", 1, 6, 9, 10, 2);
+					draw_string(1280+50, 200, (char *)"G", 1, 6, 9, 10, 2);
+					draw_string(1380+50, 200, (char *)"H", 1, 6, 9, 10, 2);
+					draw_string(1480+50, 200, (char *)"J", 1, 6, 9, 10, 2);
+					draw_string(1580+50, 200, (char *)"K", 1, 6, 9, 10, 2);
+					draw_string(1680+50, 200, (char *)"L", 1, 6, 9, 10, 2);
+
+					draw_string(980+50, 250, (char *)"Z", 1, 6, 9, 10, 2);
+					draw_string(1080+50, 250, (char *)"X", 1, 6, 9, 10, 2);
+					draw_string(1180+50, 250, (char *)"C", 1, 6, 9, 10, 2);
+					draw_string(1280+50, 250, (char *)"V", 1, 6, 9, 10, 2);
+					draw_string(1380+50, 250, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(1480+50, 250, (char *)"N", 1, 6, 9, 10, 2);
+					draw_string(1580+50, 250, (char *)"M", 1, 6, 9, 10, 2);
 
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
