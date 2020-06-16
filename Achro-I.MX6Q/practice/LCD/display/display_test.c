@@ -640,9 +640,9 @@ int main(int argc, char *argv[])
 					break;
 				}else if(x>=430 && x<=880 && y>=240 && y<=300){
 					clrcnt = 0;
-					step = LOGACCSTEP;
 					e.accountNum[0] = '\0';
 					temp = NULL;
+					step = LOGACCSTEP;
 					break;
 				}else if(x>=430 && x<=740 && y>=90 && y<=150){
 					clrcnt = 0;
@@ -705,11 +705,11 @@ int main(int argc, char *argv[])
 					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
 
-					drawline(880, 440, 1580, 440);
-					drawline(880, 441, 1580, 441);
-					drawline(880, 442, 1580, 442);
-					drawline(880, 443, 1580, 443);
-					draw_string(880, 400, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
+					drawline(600, 290, 1480, 290);
+					drawline(600, 291, 1480, 291);
+					drawline(600, 292, 1480, 292);
+					drawline(600, 293, 1480, 293);
+					draw_string(620, 255, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
 					
 
 					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
