@@ -816,7 +816,7 @@ int main(int argc, char *argv[])
 						strcat(e.accountNum, "0");
 				}else if(x>=430 && x<=520 && y>=240-5 && y<=300+5){
 					clrcnt = 0;
-					temp = searchBST(&root, e);
+					temp = searchBST(root, e);
 					if(temp != NULL){
 						printf("\n%s", temp->key.userName);
 						printf("\n%s", temp->key.accountNum);
