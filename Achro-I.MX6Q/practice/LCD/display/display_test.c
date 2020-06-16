@@ -570,10 +570,7 @@ int main(int argc, char *argv[])
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
-			}if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+			}
 			else
 			{
 				int fps = 60;
@@ -678,10 +675,7 @@ int main(int argc, char *argv[])
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
-			}if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+			}
 			else
 			{
 				int fps = 60;
@@ -846,10 +840,7 @@ int main(int argc, char *argv[])
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
-			}if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+			}
 			else
 			{
 				int fps = 60;
@@ -1124,10 +1115,7 @@ int main(int argc, char *argv[])
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
-			}if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+			}
 			else
 			{
 				int fps = 60;
@@ -1217,10 +1205,7 @@ int main(int argc, char *argv[])
 			if ((int)fbp == -1)
 			{
 				printf("Failed to mmap\n");
-			}if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+			}
 			else
 			{
 				int fps = 60;
