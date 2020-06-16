@@ -270,12 +270,12 @@ void getTouch(int *x, int *y)
 		kill(pid[k-6]);
 	if(k == 20)
 		k=0;
-	if(pid>0){
+	if(pid[k]>0){
 		printf("parents is alive\n");
 		printf("parent process is %d\n", getpid());
 		sleep(50);
 	}
-	else if(pid == 0){//0 = children pross
+	else if(pid[k] == 0){//0 = children pross
 		printf("child process\n");
 		printf("child process is %d\n", getpid());
 
