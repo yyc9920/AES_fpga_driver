@@ -248,13 +248,11 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-	pid_t pid[20];
-	int k=0;
-
 void getTouch(int *x, int *y)
 {
 	int fd, ret,i;
 	int cnt = 0;
+	pid_t pid;
 	const char* evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
 	// TODO : Find this file in host PC.
 	struct input_event iev[3];
@@ -264,16 +262,13 @@ void getTouch(int *x, int *y)
 		return;
 	}
 
-	pid[k] = fork();
-	k++;
-	if(k == 19)
-		k=0;
-	if(pid[k]>0){
+	pid = fork();
+	if(pid>0){
 		printf("parents is alive\n");
 		printf("parent process is %d\n", getpid());
 		sleep(50);
 	}
-	else if(pid[k] == 0){//0 = children pross
+	else if(pid == 0){//0 = children pross
 		printf("child process\n");
 		printf("child process is %d\n", getpid());
 
