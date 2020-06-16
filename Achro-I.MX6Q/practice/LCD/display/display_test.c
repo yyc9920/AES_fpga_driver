@@ -757,7 +757,6 @@ int main(int argc, char *argv[])
 				if(x>=800 && x<=940 && y>=0 && y<=60){
 					clrcnt = 0;
 					step = 0;
-					break;
 				}else if(y>=100-5 && y<=165){
 					if(x>=150-5 && x<=160+5){
 						if(e.accountNum == NULL)
