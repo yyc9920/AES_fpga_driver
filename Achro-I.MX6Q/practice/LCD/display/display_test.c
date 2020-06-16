@@ -266,9 +266,7 @@ void getTouch(int *x, int *y)
 
 	pid[k] = fork();
 	k++;
-	if(k>5)
-		kill(pid[k-6]);
-	if(k == 20)
+	if(k == 19)
 		k=0;
 	if(pid[k]>0){
 		printf("parents is alive\n");
