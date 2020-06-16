@@ -87,7 +87,7 @@ typedef struct
 {
     char accountNum[MAX_WORD_LENGTH];
     char userName[MAX_WORD_LENGTH];
-    transInfo *transinfo[10]; //TODO : Segmantation fault ì—ëŸ¬ ê³ ì¹˜ê¸°
+    transInfo *transinfo[10]; //TODO : Segmantation fault ?—?Ÿ¬ ê³ ì¹˜ê¸?
     int randNum;
     int otp_Num;
     int money;
@@ -101,13 +101,13 @@ typedef struct treeNode
     struct treeNode *right;
 } treeNode;
 
-// í¬ì¸í„° pê°€ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œì™€ ë¹„êµí•˜ì—¬ í•­ëª© keyë¥¼ ì‚½ìž…í•˜ëŠ” ì—°ì‚°
+// ?¬?¸?„° pê°? ê°?ë¦¬í‚¤?Š” ?…¸?“œ??? ë¹„êµ?•˜?—¬ ?•­ëª? keyë¥? ?‚½?ž…?•˜?Š” ?—°?‚°
 treeNode *insertKey(treeNode *p, element key)
 {
     treeNode *newNode;
     int compare;
 
-    // ì‚½ìž…í•  ìžë¦¬ì— ìƒˆ ë…¸ë“œë¥¼ êµ¬ì„±í•˜ì—¬ ì—°ê²°
+    // ?‚½?ž…?•  ?žë¦¬ì— ?ƒˆ ?…¸?“œë¥? êµ¬ì„±?•˜?—¬ ?—°ê²?
     if (p == NULL)
     {
         newNode = (treeNode *)malloc(sizeof(treeNode));
@@ -116,7 +116,7 @@ treeNode *insertKey(treeNode *p, element key)
         newNode->right = NULL;
         return newNode;
     }
-    // ì´ì§„ íŠ¸ë¦¬ì—ì„œ ì‚½ìž…í•  ìžë¦¬ íƒìƒ‰
+    // ?´ì§? ?Š¸ë¦¬ì—?„œ ?‚½?ž…?•  ?žë¦? ?ƒ?ƒ‰
     else
     {
         compare = strcmp(key.accountNum, p->key.accountNum);
@@ -125,9 +125,9 @@ treeNode *insertKey(treeNode *p, element key)
         else if (compare > 0)
             p->right = insertKey(p->right, key);
         else
-            printf("\n ì´ë¯¸ ê°™ì€ ë²ˆí˜¸ë¡œ ë“±ë¡ëœ ê³„ì¢Œê°€ ìžˆìŠµë‹ˆë‹¤. \n");
+            printf("\n ?´ë¯? ê°™ì?? ë²ˆí˜¸ë¡? ?“±ë¡ëœ ê³„ì¢Œê°? ?žˆ?Šµ?‹ˆ?‹¤. \n");
 
-        return p; // ì‚½ìž…í•œ ìžë¦¬ ë°˜í™˜
+        return p; // ?‚½?ž…?•œ ?žë¦? ë°˜í™˜
     }
 }
 
@@ -136,7 +136,7 @@ void insert(treeNode **root, element key)
     *root = insertKey(*root, key);
 }
 
-// root ë…¸ë“œë¶€í„° íƒìƒ‰í•˜ì—¬ keyì™€ ê°™ì€ ë…¸ë“œë¥¼ ì°¾ì•„ ì‚­ì œí•˜ëŠ” ì—°ì‚°
+// root ?…¸?“œë¶??„° ?ƒ?ƒ‰?•˜?—¬ key??? ê°™ì?? ?…¸?“œë¥? ì°¾ì•„ ?‚­? œ?•˜?Š” ?—°?‚°
 void deleteNode(treeNode *root, element key)
 {
     treeNode *parent, *p, *succ, *succ_parent;
@@ -151,13 +151,13 @@ void deleteNode(treeNode *root, element key)
         else
             p = p->right;
     }
-    // ì‚­ì œí•  ë…¸ë“œê°€ ì—†ëŠ” ê²½ìš°
+    // ?‚­? œ?•  ?…¸?“œê°? ?—†?Š” ê²½ìš°
     if (p == NULL)
     {
-        printf("\n ì‚­ì œí•  ê³„ì¢Œê°€ ë“±ë¡ë˜ì–´ ìžˆì§€ ì•ŠìŠµë‹ˆë‹¤. \n");
+        printf("\n ?‚­? œ?•  ê³„ì¢Œê°? ?“±ë¡ë˜?–´ ?žˆì§? ?•Š?Šµ?‹ˆ?‹¤. \n");
         return;
     }
-    // ì‚­ì œí•  ë…¸ë“œê°€ ë‹¨ë§ ë…¸ë“œì¸ ê²½ìš°
+    // ?‚­? œ?•  ?…¸?“œê°? ?‹¨ë§? ?…¸?“œ?¸ ê²½ìš°
     if ((p->left == NULL) && (p->right == NULL))
     {
         if (parent != NULL)
@@ -170,7 +170,7 @@ void deleteNode(treeNode *root, element key)
         else
             root = NULL;
     }
-    // ì‚­ì œí•  ë…¸ë“œê°€ ìžì‹ ë…¸ë“œë¥¼ í•œ ê°œ ê°€ì§„ ê²½ìš°
+    // ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?•œ ê°? ê°?ì§? ê²½ìš°
     else if ((p->left == NULL) || (p->right == NULL))
     {
         if (p->left != NULL)
@@ -187,7 +187,7 @@ void deleteNode(treeNode *root, element key)
         else
             root = child;
     }
-    // ì‚­ì œí•  ë…¸ë“œê°€ ìžì‹ ë…¸ë“œë¥¼ ë‘ ê°œ ê°€ì§„ ê²½ìš°
+    // ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?‘ ê°? ê°?ì§? ê²½ìš°
     else
     {
         succ_parent = p;
@@ -207,7 +207,7 @@ void deleteNode(treeNode *root, element key)
     free(p);
 }
 
-// ì´ì§„ íƒìƒ‰ íŠ¸ë¦¬ì—ì„œ í‚¤ê°’ì´ keyì¸ ë…¸ë“œ ìœ„ì¹˜ë¥¼ íƒìƒ‰í•˜ëŠ” ì—°ì‚°
+// ?´ì§? ?ƒ?ƒ‰ ?Š¸ë¦¬ì—?„œ ?‚¤ê°’ì´ key?¸ ?…¸?“œ ?œ„ì¹˜ë?? ?ƒ?ƒ‰?•˜?Š” ?—°?‚°
 treeNode *searchBST(treeNode *root, element key)
 {
     treeNode *p;
@@ -222,7 +222,7 @@ treeNode *searchBST(treeNode *root, element key)
             p = p->right;
         else
         {
-            printf("\nì°¾ì€ ê³„ì¢Œ : %s", p->key.accountNum);
+            printf("\nì°¾ì?? ê³„ì¢Œ : %s", p->key.accountNum);
             return p;
         }
     }
@@ -691,7 +691,18 @@ int main(int argc, char *argv[])
 					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
 					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
-					draw_string();
+
+					draw_string(880, 150, (char *)"Q", 1, 6, 9, 10, 2);
+					draw_string(960, 150, (char *)"W", 1, 6, 9, 10, 2);
+					draw_string(1040, 150, (char *)"E", 1, 6, 9, 10, 2);
+					draw_string(1120, 150, (char *)"R", 1, 6, 9, 10, 2);
+					draw_string(1200, 150, (char *)"T", 1, 6, 9, 10, 2);
+					draw_string(1280, 150, (char *)"Y", 1, 6, 9, 10, 2);
+					draw_string(1360, 150, (char *)"U", 1, 6, 9, 10, 2);
+					draw_string(1440, 150, (char *)"I", 1, 6, 9, 10, 2);
+					draw_string(1520, 150, (char *)"O", 1, 6, 9, 10, 2);
+					draw_string(1600, 150, (char *)"P", 1, 6, 9, 10, 2);
+
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
