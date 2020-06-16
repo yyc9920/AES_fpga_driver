@@ -60,6 +60,7 @@
 #include <linux/ioctl.h>
 #include <signal.h>
 #include "display.h"
+#include <pthread.h>
 // These are the sizes of the individual character arrays
 #define CHAR_ARR__29x24 696
 #define CHAR_ARR__10x14 168
@@ -252,8 +253,8 @@ struct fb_fix_screeninfo finfo;
 
 void getTouch(void *data)
 {
-	pid_t pid;	   // process id
-	pthread_t tid; // thread id
+	pid_t pid;
+	pthread_t tid; // thread idw
 
 	pid = getpid();
 	tid = pthread_self();
@@ -262,7 +263,6 @@ void getTouch(void *data)
 
 	int fd, ret, i;
 	int cnt = 0;
-	pid_t pid;
 	const char *evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
 	// TODO : Find this file in host PC.
 	struct input_event iev[3];
@@ -332,9 +332,13 @@ int main(int argc, char *argv[])
 	int tmp;
 	char tmp2[10];
 
+	pthread_t p_thread;
+    int thr_id;
+	char p1[] = "thread_1";   // 1번 쓰레드 이름
+
 	sleep(1);
 
-	thr_id = pthread_create(&p_thread[0], NULL, getTouch, (void *)p1);
+	thr_id = pthread_create(&p_thread, NULL, getTouch, (void *)p1);
 
 	if (thr_id < 0)
 	{
