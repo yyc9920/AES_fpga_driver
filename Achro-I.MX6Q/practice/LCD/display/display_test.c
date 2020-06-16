@@ -251,7 +251,7 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-void getTouch(void *data)
+void *getTouch(void *data)
 {
 	pid_t pid;
 	pthread_t tid; // thread idw
