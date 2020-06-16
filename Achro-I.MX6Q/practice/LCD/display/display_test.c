@@ -235,6 +235,8 @@ treeNode *searchBST(treeNode *root, element key)
 
 int step = 0;
 
+int gtcnt = 0;
+
 unsigned char *ascii_characters_BIG[128];	// Store the ASCII character set, but can have some elements blank
 unsigned char *ascii_characters_SMALL[128]; // Store the ASCII character set, but can have some eleunsigned char *c2[128];
 unsigned char *numbers_BIG[10];				// For quicker number display routines, these arrays of pointers to the numbers
@@ -260,7 +262,11 @@ void getTouch(int *x, int *y)
 		return;
 	}
 
-	pid = fork();
+	if(gtcnt == 0){
+		pid = fork();
+		gtcnt = 1;
+	}
+	else;
 	if(pid>0){
 		printf("parents is alive\n");
 		printf("parent process is %d\n", getpid());
