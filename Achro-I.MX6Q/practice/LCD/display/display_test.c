@@ -728,10 +728,11 @@ int main(int argc, char *argv[])
 					draw_string(1480+50, 250-50, (char *)"N", 1, 6, 9, 10, 2);
 					draw_string(1580+50, 250-50, (char *)"M", 1, 6, 9, 10, 2);
 
-					drawline(600, 280, 1480, 280);
-					drawline(600, 285, 1480, 285);
-					drawline(600, 290, 1480, 290);
-					draw_string(620, 270, e.userName, strlen(e.userName), 6, 9, 10, 2);
+					drawline(600, 280, 1480, 290);
+					drawline(600, 285, 1480, 291);
+					drawline(600, 290, 1480, 292);
+					drawline(600, 290, 1480, 293);
+					draw_string(620, 250, e.userName, strlen(e.userName), 6, 9, 10, 2);
 
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
