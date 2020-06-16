@@ -72,6 +72,7 @@
 #define MAKEACCSTEP 6
 #define LOGACCSTEP 7
 #define DELACCSTEP 8
+#define SHOWACCINFOSTEP 9
 
 /********Data Structure Define Starts Here*********/
 
@@ -88,6 +89,7 @@ typedef struct
     char accountNum[MAX_WORD_LENGTH];
     char userName[MAX_WORD_LENGTH];
     transInfo *transinfo[10]; //TODO : Segmantation fault ?—?Ÿ¬ ê³ ì¹˜ê¸?
+	char passwd[5];
     int randNum;
     int otp_Num;
     int money;
@@ -728,11 +730,11 @@ int main(int argc, char *argv[])
 					draw_string(1480+50, 250-50, (char *)"N", 1, 6, 9, 10, 2);
 					draw_string(1580+50, 250-50, (char *)"M", 1, 6, 9, 10, 2);
 
-					drawline(600, 280, 1480, 290);
-					drawline(600, 285, 1480, 291);
-					drawline(600, 290, 1480, 292);
-					drawline(600, 290, 1480, 293);
-					draw_string(620, 250, e.userName, strlen(e.userName), 6, 9, 10, 2);
+					drawline(600, 290, 1480, 290);
+					drawline(600, 291, 1480, 291);
+					drawline(600, 292, 1480, 292);
+					drawline(600, 293, 1480, 293);
+					draw_string(620, 255, e.userName, strlen(e.userName), 6, 9, 10, 2);
 
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
@@ -777,145 +779,158 @@ int main(int argc, char *argv[])
 					clrcnt = 0;
 					step = 0;
 					break;
-				}else if(y>=200 && y<=260){
-					if(x>=440 && x<=450){
+				}else if(y>=200-5 && y<=260+5){
+					if(x>=435 && x<=455){
 						if(e.userName == NULL)
 							strcpy(e.userName, "Q");
 						else
 							strcat(e.userName, "Q");
-					}else if(x>=490 && x<=500){
+					}else if(x>=490-5 && x<=500+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "W");
 						else
 							strcat(e.userName, "W");
-					}else if(x>=540 && x<=550){
+					}else if(x>=540-5 && x<=550+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "E");
 						else
 							strcat(e.userName, "E");
-					}else if(x>=590 && x<=600){
+					}else if(x>=590-5 && x<=600+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "R");
 						else
 							strcat(e.userName, "R");
-					}else if(x>=640 && x<=650){
+					}else if(x>=640-5 && x<=650+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "T");
 						else
 							strcat(e.userName, "T");
-					}else if(x>=690 && x<=700){
+					}else if(x>=690-5 && x<=700+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "Y");
 						else
 							strcat(e.userName, "Y");
-					}else if(x>=740 && x<=750){
+					}else if(x>=740-5 && x<=750+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "U");
 						else
 							strcat(e.userName, "U");
-					}else if(x>=790 && x<=800){
+					}else if(x>=790-5 && x<=800+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "I");
 						else
 							strcat(e.userName, "I");
-					}else if(x>=840 && x<=850){
+					}else if(x>=840-5 && x<=850+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "O");
 						else
 							strcat(e.userName, "O");
-					}else if(x>=890 && x<=900){
+					}else if(x>=890-5 && x<=900+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "P");
 						else
 							strcat(e.userName, "P");
 					}
-				}else if(y>=300 && y<=360){
-					if(x>=465 && x<=475){
+				}else if(y>=300-5 && y<=360+5){
+					if(x>=465-5 && x<=475+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "A");
 						else
 							strcat(e.userName, "A");
-					}else if(x>=515 && x<=525){
+					}else if(x>=515-5 && x<=525+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "S");
 						else
 							strcat(e.userName, "S");
-					}else if(x>=565 && x<=575){
+					}else if(x>=565-5 && x<=575+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "D");
 						else
 							strcat(e.userName, "D");
-					}else if(x>=615 && x<=625){
+					}else if(x>=615-5 && x<=625+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "F");
 						else
 							strcat(e.userName, "F");
-					}else if(x>=665 && x<=675){
+					}else if(x>=665-5 && x<=675+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "G");
 						else
 							strcat(e.userName, "G");
-					}else if(x>=715 && x<=725){
+					}else if(x>=715-5 && x<=725+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "H");
 						else
 							strcat(e.userName, "H");
-					}else if(x>=765 && x<=775){
+					}else if(x>=765-5 && x<=775+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "J");
 						else
 							strcat(e.userName, "J");
-					}else if(x>=815 && x<=825){
+					}else if(x>=815-5 && x<=825+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "K");
 						else
 							strcat(e.userName, "K");
-					}else if(x>=865 && x<=875){
+					}else if(x>=865-5 && x<=875+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "L");
 						else
 							strcat(e.userName, "L");
 					}
-				}else if(y>=400 && y<=460){
-					if(x>=515 && x<=525){
+				}else if(y>=400-5 && y<=460+5){
+					if(x>=515-5 && x<=525){
 						if(e.userName == NULL)
 							strcpy(e.userName, "Z");
 						else
 							strcat(e.userName, "Z");
-					}else if(x>=565 && x<=575){
+					}else if(x>=565-5 && x<=575+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "X");
 						else
 							strcat(e.userName, "X");
-					}else if(x>=615 && x<=625){
+					}else if(x>=615-5 && x<=625+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "C");
 						else
+							strcat(e.userName, "C");
+					}else if(x>=665-5 && x<=675+5){
+						if(e.userName == NULL)
+							strcpy(e.userName, "V");
+						else
 							strcat(e.userName, "V");
-					}else if(x>=665 && x<=675){
+					}else if(x>=715-5 && x<=725+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "B");
 						else
 							strcat(e.userName, "B");
-					}else if(x>=715 && x<=725){
+					}else if(x>=765-5 && x<=775+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "N");
 						else
 							strcat(e.userName, "N");
-					}else if(x>=765 && x<=775){
-						if(e.userName == NULL)
-							strcpy(e.userName, "N");
-						else
-							strcat(e.userName, "N");
-					}else if(x>=815 && x<=825){
+					}else if(x>=815-5 && x<=825+5){
 						if(e.userName == NULL)
 							strcpy(e.userName, "M");
 						else
 							strcat(e.userName, "M");
 					}
-				}else if(x>=430 && x<=850 && y>=390 && y<=460){
+				}else if(x>=540 && x<=820 && y>=100 && y<=150){
+					tmp = system("./prng");
+					sprintf(e.accountNum, "%d", tmp);
+					tmp = system("./prng");
+					sprintf(tmp2, "%d", tmp);
+					strcat(e.accountNum, tmp2);
+					e.money = 500000;
+					e.transcnt = 0;
+					tmp = system("./prng");
+					sprintf(e.passwd, "%d", tmp);
+					for(int i = 0; i<10; i++){
+						e.transinfo[i] = (transInfo *)malloc(sizeof(transInfo));
+					}
+					insert(&root, e);
 					clrcnt = 0;
-					step = DELACCSTEP;
+					step = SHOWACCINFOSTEP;
 					break;
 				}
 			}
@@ -923,6 +938,116 @@ int main(int argc, char *argv[])
 			
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if(step == SHOWACCINFOSTEP) {
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+				}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"ACCOUNT NUMBER", 14, 6, 9, 10, 2);
+					draw_string(880, 80, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
+					draw_string(880, 120, (char *)"PASSWORD", 8, 6, 9, 10, 2);
+					draw_string(880, 160, e.passwd, strlen(e.passwd), 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			while(1){
+				getTouch(&x, &y);
+				if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+					break;
+				}else if(x>=430 && x<=880 && y>=240 && y<=300){
+					clrcnt = 0;
+					step = LOGACCSTEP;
+					break;
+				}else if(x>=430 && x<=740 && y>=90 && y<=150){
+					clrcnt = 0;
+					e.userName[0] = '\0';
+					step = MAKEACCSTEP;
+					break;
+				}else if(x>=430 && x<=850 && y>=390 && y<=460){
+					clrcnt = 0;
+					step = DELACCSTEP;
+					break;
+				}
+
+			}
+			printf("After Touch\nx = %d, y = %d", x, y);
+			
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
 		// draw...
 		//-----------------------------------------------------------graphics loop here
 
