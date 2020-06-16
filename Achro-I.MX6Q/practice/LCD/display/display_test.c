@@ -68,7 +68,168 @@
 #define CHECKBALANCESTEP 2
 #define CHECKHISTORYSTEP 3
 #define CHECKSENDSTEP 4
+#define LOGINSTEP 5
+#define MAKEACCSTEP 6
+#define LOGACCSTEP 7
+#define DELACCSTEP 8
 
+/********Data Structure Define Starts Here*********/
+
+#define MAX_WORD_LENGTH 20
+
+typedef struct
+{
+    char transName[MAX_WORD_LENGTH];
+    int money;
+} transInfo;
+
+typedef struct
+{
+    char accountNum[MAX_WORD_LENGTH];
+    char userName[MAX_WORD_LENGTH];
+    transInfo *transinfo[10]; //TODO : Segmantation fault 에러 고치기
+    int randNum;
+    int otp_Num;
+    int money;
+    int transCnt;
+} element;
+
+typedef struct treeNode
+{
+    element key;
+    struct treeNode *left;
+    struct treeNode *right;
+} treeNode;
+
+// 포인터 p가 가리키는 노드와 비교하여 항목 key를 삽입하는 연산
+treeNode *insertKey(treeNode *p, element key)
+{
+    treeNode *newNode;
+    int compare;
+
+    // 삽입할 자리에 새 노드를 구성하여 연결
+    if (p == NULL)
+    {
+        newNode = (treeNode *)malloc(sizeof(treeNode));
+        newNode->key = key;
+        newNode->left = NULL;
+        newNode->right = NULL;
+        return newNode;
+    }
+    // 이진 트리에서 삽입할 자리 탐색
+    else
+    {
+        compare = strcmp(key.accountNum, p->key.accountNum);
+        if (compare < 0)
+            p->left = insertKey(p->left, key);
+        else if (compare > 0)
+            p->right = insertKey(p->right, key);
+        else
+            printf("\n 이미 같은 번호로 등록된 계좌가 있습니다. \n");
+
+        return p; // 삽입한 자리 반환
+    }
+}
+
+void insert(treeNode **root, element key)
+{
+    *root = insertKey(*root, key);
+}
+
+// root 노드부터 탐색하여 key와 같은 노드를 찾아 삭제하는 연산
+void deleteNode(treeNode *root, element key)
+{
+    treeNode *parent, *p, *succ, *succ_parent;
+    treeNode *child;
+    parent = NULL;
+    p = root;
+    while ((p != NULL) && (strcmp(p->key.accountNum, key.accountNum) != 0))
+    {
+        parent = p;
+        if (strcmp(key.accountNum, p->key.accountNum) < 0)
+            p = p->left;
+        else
+            p = p->right;
+    }
+    // 삭제할 노드가 없는 경우
+    if (p == NULL)
+    {
+        printf("\n 삭제할 계좌가 등록되어 있지 않습니다. \n");
+        return;
+    }
+    // 삭제할 노드가 단말 노드인 경우
+    if ((p->left == NULL) && (p->right == NULL))
+    {
+        if (parent != NULL)
+        {
+            if (parent->left == p)
+                parent->left = NULL;
+            else
+                parent->right = NULL;
+        }
+        else
+            root = NULL;
+    }
+    // 삭제할 노드가 자식 노드를 한 개 가진 경우
+    else if ((p->left == NULL) || (p->right == NULL))
+    {
+        if (p->left != NULL)
+            child = p->left;
+        else
+            child = p->right;
+        if (parent != NULL)
+        {
+            if (parent->left == p)
+                parent->left = child;
+            else
+                parent->right = child;
+        }
+        else
+            root = child;
+    }
+    // 삭제할 노드가 자식 노드를 두 개 가진 경우
+    else
+    {
+        succ_parent = p;
+        succ = p->right;
+        while (succ->left != NULL)
+        {
+            succ_parent = succ;
+            succ = succ->left;
+        }
+        if (succ_parent->left == succ)
+            succ_parent->left = succ->right;
+        else
+            succ_parent->right = succ->right;
+        p->key = succ->key;
+        p = succ;
+    }
+    free(p);
+}
+
+// 이진 탐색 트리에서 키값이 key인 노드 위치를 탐색하는 연산
+treeNode *searchBST(treeNode *root, element key)
+{
+    treeNode *p;
+    int compare;
+    p = root;
+    while (p != NULL)
+    {
+        compare = strcmp(key.accountNum, p->key.accountNum);
+        if (compare < 0)
+            p = p->left;
+        else if (compare > 0)
+            p = p->right;
+        else
+        {
+            printf("\n찾은 계좌 : %s", p->key.accountNum);
+            return p;
+        }
+    }
+    return p;
+}
+
+/********Data Structure Define Ends Here*********/
 
 int step = 0;
 
@@ -377,7 +538,7 @@ int main(int argc, char *argv[])
 				getTouch(&x, &y);
 				if(x>=430 && x<=520 && y>=400 && y<=460){
 					clrcnt = 0;
-					step = 1;
+					step = LOGINSTEP;
 					break;
 				}
 			}
@@ -386,6 +547,213 @@ int main(int argc, char *argv[])
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if(step == LOGINSTEP) {
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+				}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
+					draw_string(880, 120, (char *)"LOG IN WITH YOUR ACCOUNT", 24, 6, 9, 10, 2);
+					draw_string(880, 200, (char *)"DELETE EXISTING ACCOUNT", 23, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			while(1){
+				getTouch(&x, &y);
+				if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+					break;
+				}else if(x>=430 && x<=880 && y>=240 && y<=300){
+					clrcnt = 0;
+					step = LOGACCSTEP;
+					break;
+				}else if(x>=430 && x<=740 && y>=90 && y<=150){
+					clrcnt = 0;
+					step = MAKEACCSTEP;
+					break;
+				}else if(x>=430 && x<=850 && y>=390 && y<=460){
+					clrcnt = 0;
+					step = DELACCSTEP;
+					break;
+				}
+
+			}
+			printf("After Touch\nx = %d, y = %d", x, y);
+			
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if(step == MAKEACCSTEP) {
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+				}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
+					draw_string(880, 100, (char *)"ENTER YOUR NAME", 15, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string();
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			while(1){
+				getTouch(&x, &y);
+				if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+					break;
+				}else if(x>=430 && x<=880 && y>=240 && y<=300){
+					clrcnt = 0;
+					step = LOGACCSTEP;
+					break;
+				}else if(x>=430 && x<=740 && y>=90 && y<=150){
+					clrcnt = 0;
+					step = MAKEACCSTEP;
+					break;
+				}else if(x>=430 && x<=850 && y>=390 && y<=460){
+					clrcnt = 0;
+					step = DELACCSTEP;
+					break;
+				}
+
+			}
+			printf("After Touch\nx = %d, y = %d", x, y);
+			
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 		// draw...
 		//-----------------------------------------------------------graphics loop here
 
