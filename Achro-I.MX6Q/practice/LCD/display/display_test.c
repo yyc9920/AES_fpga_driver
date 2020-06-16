@@ -705,10 +705,10 @@ int main(int argc, char *argv[])
 					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
 
-					drawline(880, 440, 1680, 440);
-					drawline(880, 441, 1680, 441);
-					drawline(880, 442, 1680, 442);
-					drawline(880, 443, 1680, 443);
+					drawline(880, 440, 1580, 440);
+					drawline(880, 441, 1580, 441);
+					drawline(880, 442, 1580, 442);
+					drawline(880, 443, 1580, 443);
 					draw_string(880, 400, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
 					
 
@@ -814,7 +814,7 @@ int main(int argc, char *argv[])
 						strcpy(e.accountNum, "0");
 					else
 						strcat(e.accountNum, "0");
-				}else if(x>=430 && x<=570 && y>=240-5 && y<=300+5){
+				}else if(x>=430 && x<=520 && y>=240-5 && y<=300+5){
 					clrcnt = 0;
 					temp = searchBST(&root, e);
 					if(temp != NULL){
