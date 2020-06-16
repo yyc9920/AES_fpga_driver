@@ -262,11 +262,7 @@ void getTouch(int *x, int *y)
 		return;
 	}
 
-	if(gtcnt == 0){
-		pid = fork();
-		gtcnt = 1;
-	}
-	else;
+	pid = fork();
 	if(pid>0){
 		printf("parents is alive\n");
 		printf("parent process is %d\n", getpid());
@@ -291,6 +287,7 @@ void getTouch(int *x, int *y)
 				printf("x = %d, y = %d \n",iev[1].value,iev[2].value);	
 				*x = iev[1].value;
 				*y = iev[2].value;
+				kill(pid,SIGINT);
 				break;
 			}
 			else if(iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
