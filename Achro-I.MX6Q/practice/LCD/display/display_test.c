@@ -641,6 +641,8 @@ int main(int argc, char *argv[])
 				}else if(x>=430 && x<=880 && y>=240 && y<=300){
 					clrcnt = 0;
 					step = LOGACCSTEP;
+					e.accountNum[0] = '\0';
+					temp = NULL;
 					break;
 				}else if(x>=430 && x<=740 && y>=90 && y<=150){
 					clrcnt = 0;
@@ -651,6 +653,175 @@ int main(int argc, char *argv[])
 					clrcnt = 0;
 					step = DELACCSTEP;
 					break;
+				}
+
+			}
+			printf("After Touch\nx = %d, y = %d", x, y);
+			
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if(step == LOGACCSTEP) {
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+					screensize,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED,
+					fbfd,
+					0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+				}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if(clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
+					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
+					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+
+					drawline(880, 440, 1680, 440);
+					drawline(880, 441, 1680, 441);
+					drawline(880, 442, 1680, 442);
+					drawline(880, 443, 1680, 443);
+					draw_string(880, 400, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
+					
+
+					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			if(step == LOGACCSTEP){
+				getTouch(&x, &y);
+				if(x>=800 && x<=940 && y>=0 && y<=60){
+					clrcnt = 0;
+					step = 0;
+					break;
+				}else if(y>=100-5 && y<=165){
+					if(x>=150-5 && x<=160+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "1");
+						else
+							strcat(e.accountNum, "1");
+					}else if(x>=200-5 && x<=210+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "2");
+						else
+							strcat(e.accountNum, "2");
+					}else if(x>=250-5 && x<=260+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "3");
+						else
+							strcat(e.accountNum, "3");
+					}
+				}else if(y>=200-5 && y<=265){
+					if(x>=150-5 && x<=160+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "4");
+						else
+							strcat(e.accountNum, "4");
+					}else if(x>=200-5 && x<=210+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "5");
+						else
+							strcat(e.accountNum, "5");
+					}else if(x>=250-5 && x<=260+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "6");
+						else
+							strcat(e.accountNum, "6");
+					}
+				}else if(y>=300-5 && y<=365){
+					if(x>=150-5 && x<=160+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "7");
+						else
+							strcat(e.accountNum, "7");
+					}else if(x>=200-5 && x<=210+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "8");
+						else
+							strcat(e.accountNum, "8");
+					}else if(x>=250-5 && x<=260+5){
+						if(e.accountNum == NULL)
+							strcpy(e.accountNum, "9");
+						else
+							strcat(e.accountNum, "9");
+					}
+				}else if(x>=200-5 && x<=210+5 && y>=400-5 && y<=465){
+					if(e.accountNum == NULL)
+						strcpy(e.accountNum, "0");
+					else
+						strcat(e.accountNum, "0");
+				}else if(x>=430 && x<=570 && y>=240-5 && y<=300+5){
+					clrcnt = 0;
+					temp = searchBST(&root, e);
+					if(temp != NULL){
+						printf("\n%s", temp->key.userName);
+						printf("\n%s", temp->key.accountNum);
+					}
+					step = MAKEACCSTEP;
 				}
 
 			}
@@ -778,7 +949,6 @@ int main(int argc, char *argv[])
 				if(x>=800 && x<=940 && y>=0 && y<=60){
 					clrcnt = 0;
 					step = 0;
-					break;
 				}else if(y>=200-5 && y<=260+5){
 					if(x>=435 && x<=455){
 						if(e.userName == NULL)
@@ -1171,10 +1341,8 @@ int main(int argc, char *argv[])
 					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
 					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
 					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
-					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);if(x>=800 && x<=940 && y>=0 && y<=60){
-					clrcnt = 0;
-					step = 0;
-				}
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+
 					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
 					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
 					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
