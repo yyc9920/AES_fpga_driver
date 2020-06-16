@@ -4,13 +4,22 @@
 #include "string.h"
 #define MAX_WORD_LENGTH 20
 #define MAX_MEAN_LENGTH 200
-// 영어 사전 항목의 구조 정의
+
 typedef struct
 {
-    char accountNum[MAX_MEAN_LENGTH];
+    char transName[MAX_WORD_LENGTH];
+    int money;
+} transInfo;
+
+typedef struct
+{
+    char accountNum[MAX_WORD_LENGTH];
     char userName[MAX_WORD_LENGTH];
+    transInfo *transinfo[10]; //TODO : Segmantation fault 에러 고치기
     int randNum;
     int otp_Num;
+    int money;
+    int transCnt;
 } element;
 
 typedef struct treeNode
@@ -25,6 +34,7 @@ treeNode *insertKey(treeNode *p, element key)
 {
     treeNode *newNode;
     int compare;
+
     // 삽입할 자리에 새 노드를 구성하여 연결
     if (p == NULL)
     {
@@ -44,7 +54,7 @@ treeNode *insertKey(treeNode *p, element key)
             p->right = insertKey(p->right, key);
         else
             printf("\n 이미 같은 번호로 등록된 계좌가 있습니다. \n");
-        
+
         return p; // 삽입한 자리 반환
     }
 }
@@ -153,11 +163,10 @@ void displayInorder(treeNode *root)
     if (root)
     {
         displayInorder(root->left);
-        printf("\n%s : %s", root->key.accountNum, root->key.accountNum);
+        printf("\n%s : %s", root->key.userName, root->key.accountNum);
         displayInorder(root->right);
     }
 }
-
 
 void menu()
 {
@@ -166,14 +175,16 @@ void menu()
     printf("\n\t2 : 입력");
     printf("\n\t3 : 삭제");
     printf("\n\t4 : 검색");
-    printf("\n\t5 : 종료");
+    printf("\n\t5 : 송금");
+    printf("\n\t6 : 거래내역조회");
+    printf("\n\t7 : 종료");
     printf("\n*---------------------------*\n ");
 }
 
 void main()
 {
     element e;
-    treeNode *root = NULL, *temp = NULL;
+    treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
     int tmp;
     char tmp2[10];
     int choice;
@@ -196,24 +207,73 @@ void main()
             tmp = system("./prng");
             sprintf(tmp2, "%d", tmp);
             strcat(e.accountNum, tmp2);
+            e.money = 500000;
+            e.transCnt = 0;
+            for(int i = 0; i<10; i++){
+                e.transinfo[i] = (transInfo *)malloc(sizeof(transInfo));
+            }
             insert(&root, e);
             break;
         case 3:
-            printf("\n[단어 삭제] 삭제할 단어 : ");
+            printf("\n[계좌 삭제] 삭제할 계좌 : ");
             scanf("%s", e.accountNum);
             deleteNode(root, e);
             break;
         case 4:
-            printf("\n[단어 검색] 검색할 단어 : ");
-            scanf("%s", e.userName);
+            printf("\n[계좌 검색] 검색할 계좌 : ");
+            scanf("%s", e.accountNum);
             temp = searchBST(root, e);
             if (temp != NULL)
-                printf("\n단어 뜻 : %s", temp->key.accountNum);
+            {
+                printf("\n계좌 주인 : %s", temp->key.userName);
+                printf("\n잔액 : %d", temp->key.money);
+            }
             else
-                printf("\n사전에 없는 단어입니다.");
+                printf("\n계좌가 없습니다.");
+            break;
+        case 5:
+            printf("\n[계좌 입력] 송금할 계좌 입력 : ");
+            scanf("%s", e.accountNum);
+            temp = searchBST(root, e);
+            printf("\n[계좌 입력] 본인 계좌 입력 : ");
+            scanf("%s", e.accountNum);
+            temp2 = searchBST(root, e);
+            if (temp != NULL)
+            {
+                printf("\n예금주 명 : %s", temp->key.userName);
+                printf("\n송금 금액 : ");
+                scanf("%d", &e.money);
+                if(e.money > temp2->key.money){
+                    printf("\n잔액이 부족합니다!");
+                    break;
+                }
+                printf("\n받는 분에게 표기 : ");
+                scanf("%s", tmp2);
+
+                temp->key.money = temp->key.money + e.money;
+                strcpy(temp->key.transinfo[temp->key.transCnt]->transName, tmp2);
+                temp->key.transinfo[temp->key.transCnt]->money = e.money;
+                temp->key.transCnt++;
+
+                temp2->key.money = temp2->key.money - e.money;
+                strcpy(temp2->key.transinfo[temp2->key.transCnt]->transName, temp->key.userName);
+                temp2->key.transinfo[temp2->key.transCnt]->money = -e.money;
+                temp2->key.transCnt++;
+            }
+            else
+                printf("\n계좌가 없습니다.");
+            break;
+        case 6:
+            printf("\n[계좌 입력] 거래 내역을 조회할 계좌를 입력하세요 : ");
+            scanf("%s", e.accountNum);
+            temp = searchBST(root, e);
+            printf("\n/**********거래내역조회**********/\n");
+            for(int i = 0; i<10; i++){
+                printf("\n%d : 거래금액  %d, 거래자 명  %s\n", i+1, temp->key.transinfo[i]->money, temp->key.transinfo[i]->transName);
+            }
             break;
         }
         while (getchar() != '\n')
             ;
-    } while (choice != 5);
+    } while (choice != 7);
 }
