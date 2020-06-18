@@ -321,30 +321,8 @@ void *getTouch(void *data)
 	}
 }
 
-int main(int argc, char *argv[])
+void *mainThread(void *data)
 {
-	int clrcnt = 0;
-	struct fb_var_screeninfo orig_vinfo;
-	long int screensize = 0;
-
-	element e;
-	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
-	int tmp;
-	char tmp2[10];
-
-	pthread_t p_thread;
-    int thr_id;
-	char p1[] = "thread_1";   // 1번 쓰레드 이름
-
-	sleep(1);
-
-	thr_id = pthread_create(&p_thread, NULL, getTouch, (void *)p1);
-
-	if (thr_id < 0)
-	{
-		perror("thread create error : ");
-		exit(0);
-	}
 
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -1036,8 +1014,9 @@ int main(int argc, char *argv[])
 			{
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
-					clrcnt = 0;x=0;
-					y=0;
+					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = 0;
 				}
 				else if (y >= 200 - 5 && y <= 260 + 5)
@@ -1047,80 +1026,90 @@ int main(int argc, char *argv[])
 						if (e.userName == NULL)
 							strcpy(e.userName, "Q");
 						else
-							strcat(e.userName, "Q");x=0;
-					y=0;
+							strcat(e.userName, "Q");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 490 - 5 && x <= 500 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "W");
 						else
-							strcat(e.userName, "W");x=0;
-					y=0;
+							strcat(e.userName, "W");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 540 - 5 && x <= 550 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "E");
 						else
-							strcat(e.userName, "E");x=0;
-					y=0;
+							strcat(e.userName, "E");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 590 - 5 && x <= 600 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "R");
 						else
-							strcat(e.userName, "R");x=0;
-					y=0;
+							strcat(e.userName, "R");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 640 - 5 && x <= 650 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "T");
 						else
-							strcat(e.userName, "T");x=0;
-					y=0;
+							strcat(e.userName, "T");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 690 - 5 && x <= 700 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "Y");
 						else
-							strcat(e.userName, "Y");x=0;
-					y=0;
+							strcat(e.userName, "Y");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 740 - 5 && x <= 750 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "U");
 						else
-							strcat(e.userName, "U");x=0;
-					y=0;
+							strcat(e.userName, "U");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 790 - 5 && x <= 800 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "I");
 						else
-							strcat(e.userName, "I");x=0;
-					y=0;
+							strcat(e.userName, "I");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 840 - 5 && x <= 850 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "O");
 						else
-							strcat(e.userName, "O");x=0;
-					y=0;
+							strcat(e.userName, "O");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 890 - 5 && x <= 900 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "P");
 						else
-							strcat(e.userName, "P");x=0;
-					y=0;
+							strcat(e.userName, "P");
+						x = 0;
+						y = 0;
 					}
 				}
 				else if (y >= 300 - 5 && y <= 360 + 5)
@@ -1130,72 +1119,81 @@ int main(int argc, char *argv[])
 						if (e.userName == NULL)
 							strcpy(e.userName, "A");
 						else
-							strcat(e.userName, "A");x=0;
-					y=0;
+							strcat(e.userName, "A");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 515 - 5 && x <= 525 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "S");
 						else
-							strcat(e.userName, "S");x=0;
-					y=0;
+							strcat(e.userName, "S");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 565 - 5 && x <= 575 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "D");
 						else
-							strcat(e.userName, "D");x=0;
-					y=0;
+							strcat(e.userName, "D");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 615 - 5 && x <= 625 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "F");
 						else
-							strcat(e.userName, "F");x=0;
-					y=0;
+							strcat(e.userName, "F");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 665 - 5 && x <= 675 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "G");
 						else
-							strcat(e.userName, "G");x=0;
-					y=0;
+							strcat(e.userName, "G");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 715 - 5 && x <= 725 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "H");
 						else
-							strcat(e.userName, "H");x=0;
-					y=0;
+							strcat(e.userName, "H");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 765 - 5 && x <= 775 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "J");
 						else
-							strcat(e.userName, "J");x=0;
-					y=0;
+							strcat(e.userName, "J");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 815 - 5 && x <= 825 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "K");
 						else
-							strcat(e.userName, "K");x=0;
-					y=0;
+							strcat(e.userName, "K");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 865 - 5 && x <= 875 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "L");
 						else
-							strcat(e.userName, "L");x=0;
-					y=0;
+							strcat(e.userName, "L");
+						x = 0;
+						y = 0;
 					}
 				}
 				else if (y >= 400 - 5 && y <= 460 + 5)
@@ -1205,56 +1203,63 @@ int main(int argc, char *argv[])
 						if (e.userName == NULL)
 							strcpy(e.userName, "Z");
 						else
-							strcat(e.userName, "Z");x=0;
-					y=0;
+							strcat(e.userName, "Z");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 565 - 5 && x <= 575 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "X");
 						else
-							strcat(e.userName, "X");x=0;
-					y=0;
+							strcat(e.userName, "X");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 615 - 5 && x <= 625 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "C");
 						else
-							strcat(e.userName, "C");x=0;
-					y=0;
+							strcat(e.userName, "C");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 665 - 5 && x <= 675 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "V");
 						else
-							strcat(e.userName, "V");x=0;
-					y=0;
+							strcat(e.userName, "V");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 715 - 5 && x <= 725 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "B");
 						else
-							strcat(e.userName, "B");x=0;
-					y=0;
+							strcat(e.userName, "B");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 765 - 5 && x <= 775 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "N");
 						else
-							strcat(e.userName, "N");x=0;
-					y=0;
+							strcat(e.userName, "N");
+						x = 0;
+						y = 0;
 					}
 					else if (x >= 815 - 5 && x <= 825 + 5)
 					{
 						if (e.userName == NULL)
 							strcpy(e.userName, "M");
 						else
-							strcat(e.userName, "M");x=0;
-					y=0;
+							strcat(e.userName, "M");
+						x = 0;
+						y = 0;
 					}
 				}
 				else if (x >= 540 && x <= 820 && y >= 100 && y <= 150)
@@ -1273,8 +1278,9 @@ int main(int argc, char *argv[])
 						e.transinfo[i] = (transInfo *)malloc(sizeof(transInfo));
 					}
 					insert(&root, e);
-					clrcnt = 0;x=0;
-					y=0;
+					clrcnt = 0;
+					x = 0;
+					y = 0;
 					step = SHOWACCINFOSTEP;
 				}
 			}
@@ -1365,8 +1371,8 @@ int main(int argc, char *argv[])
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 0;
 					break;
 				}
@@ -1457,23 +1463,23 @@ int main(int argc, char *argv[])
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 0;
 				}
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 0;
 					break;
 				}
 				else if (x >= 430 && x <= 520 && y >= 390 && y <= 460)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 4;
 					break;
 				}
@@ -1572,8 +1578,8 @@ int main(int argc, char *argv[])
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 0;
 					break;
 				}
@@ -1677,8 +1683,8 @@ int main(int argc, char *argv[])
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x=0;
-					y=0;
+					x = 0;
+					y = 0;
 					step = 0;
 					break;
 				}
@@ -1687,6 +1693,46 @@ int main(int argc, char *argv[])
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+	}
+}
+
+//TODO : Make Main Thread.
+
+/*TODO : fnd 출력, 푸시버튼 입력(1~9까지), dip스위치 입력, 텍스트 lcd출력, 
+		 부저 출력, 서보모터, 베팅, 퀴즈 문제(헤더)
+*/
+int main(int argc, char *argv[])
+{
+	int clrcnt = 0;
+	struct fb_var_screeninfo orig_vinfo;
+	long int screensize = 0;
+
+	element e;
+	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
+	int tmp;
+	char tmp2[10];
+
+	pthread_t p_thread[2];
+	int thr_id;
+	char p1[] = "thread_1"; // 1번 쓰레드 이름
+	char pM[] = "thread_m"; // 메인 쓰레드 이름
+
+	sleep(1);
+
+	thr_id = pthread_create(&p_thread[0], NULL, getTouch, (void *)p1);
+
+	if (thr_id < 0)
+	{
+		perror("thread create error : ");
+		exit(0);
+	}
+
+	thr_id = pthread_create(&p_thread[1], NULL, mainThread, (void *)p2);
+
+	if (thr_id < 0)
+	{
+		perror("thread create error : ");
+		exit(0);
 	}
 
 	// close fb file
