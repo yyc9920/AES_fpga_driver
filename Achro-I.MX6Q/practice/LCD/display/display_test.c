@@ -323,6 +323,14 @@ void *getTouch(void *data)
 
 void *mainThread(void *data)
 {
+	int clrcnt = 0;
+	struct fb_var_screeninfo orig_vinfo;
+	long int screensize = 0;
+
+	element e;
+	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
+	int tmp;
+	char tmp2[10];
 
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -433,7 +441,7 @@ void *mainThread(void *data)
 	if (fbfd == -1)
 	{
 		printf("Error: cannot open framebuffer device.\n");
-		return (1);
+		return;
 	}
 
 	// Get variable screen information
@@ -1703,14 +1711,6 @@ void *mainThread(void *data)
 */
 int main(int argc, char *argv[])
 {
-	int clrcnt = 0;
-	struct fb_var_screeninfo orig_vinfo;
-	long int screensize = 0;
-
-	element e;
-	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
-	int tmp;
-	char tmp2[10];
 
 	pthread_t p_thread[2];
 	int thr_id;
@@ -1727,7 +1727,7 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	thr_id = pthread_create(&p_thread[1], NULL, mainThread, (void *)p2);
+	thr_id = pthread_create(&p_thread[1], NULL, mainThread, (void *)pM);
 
 	if (thr_id < 0)
 	{
