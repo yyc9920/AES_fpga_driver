@@ -234,11 +234,14 @@ treeNode *searchBST(treeNode *root, element key)
 
 /********Data Structure Define Ends Here*********/
 
+pthread_mutex_t mtx;
+
 int step = 0;
 
 int x, y;
 
 int gtcnt = 0;
+int clrcnt = 0;
 
 unsigned char *ascii_characters_BIG[128];	// Store the ASCII character set, but can have some elements blank
 unsigned char *ascii_characters_SMALL[128]; // Store the ASCII character set, but can have some eleunsigned char *c2[128];
@@ -251,16 +254,10 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
+
 void *getTouch(void *data)
 {
-	pid_t pid;
-	pthread_t tid; // thread idw
-
-	pid = getpid();
-	tid = pthread_self();
-
 	char *thread_name = (char *)data;
-
 	int fd, ret, i;
 	int cnt = 0;
 	const char *evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
@@ -273,15 +270,7 @@ void *getTouch(void *data)
 		return;
 	}
 
-	pid = fork();
-	if (pid > 0)
-	{
-		printf("parents is alive\n");
-		printf("parent process is %d\n", getpid());
-		sleep(50);
-	}
-	else if (pid == 0)
-	{ //0 = children pross
+	 //0 = children pross
 		printf("child process\n");
 		printf("child process is %d\n", getpid());
 
@@ -301,7 +290,6 @@ void *getTouch(void *data)
 				printf("x = %d, y = %d \n", iev[1].value, iev[2].value);
 				x = iev[1].value;
 				y = iev[2].value;
-				break;
 			}
 			else if (iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -313,17 +301,13 @@ void *getTouch(void *data)
 				printf("touching...\n");
 			}
 		}
-	}
-	else
-	{
-		printf("can't fork, erro\n");
-		exit(0);
-	}
+	
 }
 
 void *mainThread(void *data)
 {
-	int clrcnt = 0;
+	char *thread_name = (char *)data;
+
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
 
@@ -331,13 +315,6 @@ void *mainThread(void *data)
 	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
 	int tmp;
 	char tmp2[10];
-
-	pid_t pid;
-	pthread_t tid; // thread idw
-
-	pid = getpid();
-	tid = pthread_self();
-	char *thread_name = (char *)data;
 
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
@@ -566,18 +543,18 @@ void *mainThread(void *data)
 			}
 
 			//step forwarwd to  step 1
-			while (1)
-			{
-				if (x >= 430 && x <= 520 && y >= 400 && y <= 460)
-				{
+				//if (x >= 430)
+				//{
+				//}
+			while(1){
+				if(x >= 430 && x <= 520 && y >= 400 && y<= 460){
 					clrcnt = 0;
-					x = 0;
-					y = 0;
+					x=0;
+					y=0;
 					step = LOGINSTEP;
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -695,7 +672,6 @@ void *mainThread(void *data)
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -905,11 +881,10 @@ void *mainThread(void *data)
 					{
 						printf("\n%s", temp->key.userName);
 						printf("\n%s", temp->key.accountNum);
-					}
-					step = MAKEACCSTEP;
+						step = SELECTSTEP;
+					}else;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1299,7 +1274,6 @@ void *mainThread(void *data)
 					step = SHOWACCINFOSTEP;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1392,7 +1366,6 @@ void *mainThread(void *data)
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1402,7 +1375,7 @@ void *mainThread(void *data)
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if (step == 1)
+		if (step == SELECTSTEP)
 		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
@@ -1499,7 +1472,6 @@ void *mainThread(void *data)
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1599,7 +1571,6 @@ void *mainThread(void *data)
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1704,7 +1675,6 @@ void *mainThread(void *data)
 					break;
 				}
 			}
-			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1716,13 +1686,16 @@ void *mainThread(void *data)
 /*TODO : fnd 출력, 푸시버튼 입력(1~9까지), dip스위치 입력, 텍스트 lcd출력, 
 		 부저 출력, 서보모터, 베팅, 퀴즈 문제(헤더)
 */
-int main(int argc, char *argv[])
+int main()
 {
 
 	pthread_t p_thread[2];
 	int thr_id;
+	int status;
 	char p1[] = "thread_1"; // 1번 쓰레드 이름
 	char pM[] = "thread_m"; // 메인 쓰레드 이름
+
+	pthread_mutex_init(&mtx, NULL);
 
 	sleep(1);
 
@@ -1730,7 +1703,7 @@ int main(int argc, char *argv[])
 
 	if (thr_id < 0)
 	{
-		perror("thread create error : ");
+		printf("thread create error : getTouch");
 		exit(0);
 	}
 
@@ -1738,12 +1711,12 @@ int main(int argc, char *argv[])
 
 	if (thr_id < 0)
 	{
-		perror("thread create error : ");
+		printf("thread create error : mainThread");
 		exit(0);
 	}
 
-	// close fb file
-	close(fbfd);
+	pthread_join(p_thread[0], (void *)&status);
+	pthread_join(p_thread[1], (void *)&status);
 
 	return 0;
 }
