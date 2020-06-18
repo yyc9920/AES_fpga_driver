@@ -332,6 +332,13 @@ void *mainThread(void *data)
 	int tmp;
 	char tmp2[10];
 
+	pid_t pid;
+	pthread_t tid; // thread idw
+
+	pid = getpid();
+	tid = pthread_self();
+	char *thread_name = (char *)data;
+
 	// The actual glyphs here. Discard that which is not used to save memory
 	{
 		// Elements actually correspond to the ASCII chart
