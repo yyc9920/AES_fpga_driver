@@ -60,7 +60,6 @@
 #include <linux/ioctl.h>
 #include <signal.h>
 #include "display.h"
-#include <pthread.h>
 // These are the sizes of the individual character arrays
 #define CHAR_ARR__29x24 696
 #define CHAR_ARR__10x14 168
@@ -234,14 +233,9 @@ treeNode *searchBST(treeNode *root, element key)
 
 /********Data Structure Define Ends Here*********/
 
-pthread_mutex_t mtx;
-
 int step = 0;
 
-int x, y;
-
 int gtcnt = 0;
-int clrcnt = 0;
 
 unsigned char *ascii_characters_BIG[128];	// Store the ASCII character set, but can have some elements blank
 unsigned char *ascii_characters_SMALL[128]; // Store the ASCII character set, but can have some eleunsigned char *c2[128];
@@ -254,12 +248,11 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
-
-void *getTouch(void *data)
+void getTouch(int *x, int *y)
 {
-	char *thread_name = (char *)data;
 	int fd, ret, i;
 	int cnt = 0;
+	pid_t pid;
 	const char *evdev_path = "/dev/input/by-path/platform-imx-i2c.2-event";
 	// TODO : Find this file in host PC.
 	struct input_event iev[3];
@@ -270,7 +263,15 @@ void *getTouch(void *data)
 		return;
 	}
 
-	 //0 = children pross
+	pid = fork();
+	if (pid > 0)
+	{
+		printf("parents is alive\n");
+		printf("parent process is %d\n", getpid());
+		sleep(50);
+	}
+	else if (pid == 0)
+	{ //0 = children pross
 		printf("child process\n");
 		printf("child process is %d\n", getpid());
 
@@ -288,8 +289,9 @@ void *getTouch(void *data)
 			{
 				printf("touch!!!!\n");
 				printf("x = %d, y = %d \n", iev[1].value, iev[2].value);
-				x = iev[1].value;
-				y = iev[2].value;
+				*x = iev[1].value;
+				*y = iev[2].value;
+				break;
 			}
 			else if (iev[0].type == 0 && iev[1].type == 1 && iev[2].type == 0)
 			{
@@ -301,13 +303,18 @@ void *getTouch(void *data)
 				printf("touching...\n");
 			}
 		}
-	
+	}
+	else
+	{
+		printf("can't fork, erro\n");
+		exit(0);
+	}
 }
 
-void *mainThread(void *data)
+int main(int argc, char *argv[])
 {
-	char *thread_name = (char *)data;
-
+	int x, y;
+	int clrcnt = 0;
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
 
@@ -425,7 +432,7 @@ void *mainThread(void *data)
 	if (fbfd == -1)
 	{
 		printf("Error: cannot open framebuffer device.\n");
-		return;
+		return (1);
 	}
 
 	// Get variable screen information
@@ -467,7 +474,7 @@ void *mainThread(void *data)
 	}
 
 	page_size = finfo.line_length * vinfo.yres;
-
+	
 	while (1)
 	{
 
@@ -543,18 +550,17 @@ void *mainThread(void *data)
 			}
 
 			//step forwarwd to  step 1
-				//if (x >= 430)
-				//{
-				//}
-			while(1){
-				if(x >= 430 && x <= 520 && y >= 400 && y<= 460){
+			while (1)
+			{
+				getTouch(&x, &y);
+				if (x >= 430 && x <= 520 && y >= 400 && y <= 460)
+				{
 					clrcnt = 0;
-					x=0;
-					y=0;
 					step = LOGINSTEP;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -636,19 +642,16 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			while (1)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 					break;
 				}
 				else if (x >= 430 && x <= 880 && y >= 240 && y <= 300)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					e.accountNum[0] = '\0';
 					temp = NULL;
 					step = LOGACCSTEP;
@@ -657,8 +660,6 @@ void *mainThread(void *data)
 				else if (x >= 430 && x <= 740 && y >= 90 && y <= 150)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					e.userName[0] = '\0';
 					step = MAKEACCSTEP;
 					break;
@@ -666,12 +667,11 @@ void *mainThread(void *data)
 				else if (x >= 430 && x <= 850 && y >= 390 && y <= 460)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = DELACCSTEP;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -765,11 +765,10 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			if (step == LOGACCSTEP)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 				}
 				else if (y >= 100 - 5 && y <= 165)
@@ -780,8 +779,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "1");
 						else
 							strcat(e.accountNum, "1");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 200 - 5 && x <= 210 + 5)
 					{
@@ -789,8 +786,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "2");
 						else
 							strcat(e.accountNum, "2");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 250 - 5 && x <= 260 + 5)
 					{
@@ -798,8 +793,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "3");
 						else
 							strcat(e.accountNum, "3");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (y >= 200 - 5 && y <= 265)
@@ -810,8 +803,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "4");
 						else
 							strcat(e.accountNum, "4");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 200 - 5 && x <= 210 + 5)
 					{
@@ -819,8 +810,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "5");
 						else
 							strcat(e.accountNum, "5");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 250 - 5 && x <= 260 + 5)
 					{
@@ -828,8 +817,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "6");
 						else
 							strcat(e.accountNum, "6");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (y >= 300 - 5 && y <= 365)
@@ -840,8 +827,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "7");
 						else
 							strcat(e.accountNum, "7");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 200 - 5 && x <= 210 + 5)
 					{
@@ -849,8 +834,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "8");
 						else
 							strcat(e.accountNum, "8");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 250 - 5 && x <= 260 + 5)
 					{
@@ -858,8 +841,6 @@ void *mainThread(void *data)
 							strcpy(e.accountNum, "9");
 						else
 							strcat(e.accountNum, "9");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
@@ -868,23 +849,20 @@ void *mainThread(void *data)
 						strcpy(e.accountNum, "0");
 					else
 						strcat(e.accountNum, "0");
-					x = 0;
-					y = 0;
 				}
 				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					temp = searchBST(root, e);
 					if (temp != NULL)
 					{
 						printf("\n%s", temp->key.userName);
 						printf("\n%s", temp->key.accountNum);
-						step = SELECTSTEP;
-					}else;
+					}
+					step = MAKEACCSTEP;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1002,11 +980,10 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			if (step == MAKEACCSTEP)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 				}
 				else if (y >= 200 - 5 && y <= 260 + 5)
@@ -1017,8 +994,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "Q");
 						else
 							strcat(e.userName, "Q");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 490 - 5 && x <= 500 + 5)
 					{
@@ -1026,8 +1001,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "W");
 						else
 							strcat(e.userName, "W");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 540 - 5 && x <= 550 + 5)
 					{
@@ -1035,8 +1008,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "E");
 						else
 							strcat(e.userName, "E");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 590 - 5 && x <= 600 + 5)
 					{
@@ -1044,8 +1015,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "R");
 						else
 							strcat(e.userName, "R");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 640 - 5 && x <= 650 + 5)
 					{
@@ -1053,8 +1022,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "T");
 						else
 							strcat(e.userName, "T");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 690 - 5 && x <= 700 + 5)
 					{
@@ -1062,8 +1029,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "Y");
 						else
 							strcat(e.userName, "Y");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 740 - 5 && x <= 750 + 5)
 					{
@@ -1071,8 +1036,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "U");
 						else
 							strcat(e.userName, "U");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 790 - 5 && x <= 800 + 5)
 					{
@@ -1080,8 +1043,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "I");
 						else
 							strcat(e.userName, "I");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 840 - 5 && x <= 850 + 5)
 					{
@@ -1089,8 +1050,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "O");
 						else
 							strcat(e.userName, "O");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 890 - 5 && x <= 900 + 5)
 					{
@@ -1098,8 +1057,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "P");
 						else
 							strcat(e.userName, "P");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (y >= 300 - 5 && y <= 360 + 5)
@@ -1110,8 +1067,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "A");
 						else
 							strcat(e.userName, "A");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 515 - 5 && x <= 525 + 5)
 					{
@@ -1119,8 +1074,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "S");
 						else
 							strcat(e.userName, "S");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 565 - 5 && x <= 575 + 5)
 					{
@@ -1128,8 +1081,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "D");
 						else
 							strcat(e.userName, "D");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 615 - 5 && x <= 625 + 5)
 					{
@@ -1137,8 +1088,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "F");
 						else
 							strcat(e.userName, "F");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 665 - 5 && x <= 675 + 5)
 					{
@@ -1146,8 +1095,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "G");
 						else
 							strcat(e.userName, "G");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 715 - 5 && x <= 725 + 5)
 					{
@@ -1155,8 +1102,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "H");
 						else
 							strcat(e.userName, "H");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 765 - 5 && x <= 775 + 5)
 					{
@@ -1164,8 +1109,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "J");
 						else
 							strcat(e.userName, "J");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 815 - 5 && x <= 825 + 5)
 					{
@@ -1173,8 +1116,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "K");
 						else
 							strcat(e.userName, "K");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 865 - 5 && x <= 875 + 5)
 					{
@@ -1182,8 +1123,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "L");
 						else
 							strcat(e.userName, "L");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (y >= 400 - 5 && y <= 460 + 5)
@@ -1194,8 +1133,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "Z");
 						else
 							strcat(e.userName, "Z");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 565 - 5 && x <= 575 + 5)
 					{
@@ -1203,8 +1140,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "X");
 						else
 							strcat(e.userName, "X");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 615 - 5 && x <= 625 + 5)
 					{
@@ -1212,8 +1147,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "C");
 						else
 							strcat(e.userName, "C");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 665 - 5 && x <= 675 + 5)
 					{
@@ -1221,8 +1154,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "V");
 						else
 							strcat(e.userName, "V");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 715 - 5 && x <= 725 + 5)
 					{
@@ -1230,8 +1161,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "B");
 						else
 							strcat(e.userName, "B");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 765 - 5 && x <= 775 + 5)
 					{
@@ -1239,8 +1168,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "N");
 						else
 							strcat(e.userName, "N");
-						x = 0;
-						y = 0;
 					}
 					else if (x >= 815 - 5 && x <= 825 + 5)
 					{
@@ -1248,8 +1175,6 @@ void *mainThread(void *data)
 							strcpy(e.userName, "M");
 						else
 							strcat(e.userName, "M");
-						x = 0;
-						y = 0;
 					}
 				}
 				else if (x >= 540 && x <= 820 && y >= 100 && y <= 150)
@@ -1269,11 +1194,10 @@ void *mainThread(void *data)
 					}
 					insert(&root, e);
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = SHOWACCINFOSTEP;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1357,15 +1281,15 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			while (1)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1375,7 +1299,7 @@ void *mainThread(void *data)
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if (step == SELECTSTEP)
+		if (step == 1)
 		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
@@ -1448,30 +1372,26 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			while (1)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 				}
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 					break;
 				}
 				else if (x >= 430 && x <= 520 && y >= 390 && y <= 460)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 4;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1562,15 +1482,15 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			while (1)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
@@ -1666,57 +1586,22 @@ void *mainThread(void *data)
 			//step backwarwd to step 0
 			while (1)
 			{
+				getTouch(&x, &y);
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
 					clrcnt = 0;
-					x = 0;
-					y = 0;
 					step = 0;
 					break;
 				}
 			}
+			printf("After Touch\nx = %d, y = %d", x, y);
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 	}
-}
 
-//TODO : Make Main Thread.
-
-/*TODO : fnd 출력, 푸시버튼 입력(1~9까지), dip스위치 입력, 텍스트 lcd출력, 
-		 부저 출력, 서보모터, 베팅, 퀴즈 문제(헤더)
-*/
-int main()
-{
-
-	pthread_t p_thread[2];
-	int thr_id;
-	int status;
-	char p1[] = "thread_1"; // 1번 쓰레드 이름
-	char pM[] = "thread_m"; // 메인 쓰레드 이름
-
-	pthread_mutex_init(&mtx, NULL);
-
-	sleep(1);
-
-	thr_id = pthread_create(&p_thread[0], NULL, getTouch, (void *)p1);
-
-	if (thr_id < 0)
-	{
-		printf("thread create error : getTouch");
-		exit(0);
-	}
-
-	thr_id = pthread_create(&p_thread[1], NULL, mainThread, (void *)pM);
-
-	if (thr_id < 0)
-	{
-		printf("thread create error : mainThread");
-		exit(0);
-	}
-
-	pthread_join(p_thread[0], (void *)&status);
-	pthread_join(p_thread[1], (void *)&status);
+	// close fb file
+	close(fbfd);
 
 	return 0;
 }

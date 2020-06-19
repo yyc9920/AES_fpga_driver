@@ -74,6 +74,7 @@
 #define LOGACCSTEP 7
 #define DELACCSTEP 8
 #define SHOWACCINFOSTEP 9
+#define PASSWDSTEP 10
 
 /********Data Structure Define Starts Here*********/
 
@@ -89,9 +90,9 @@ typedef struct
 {
 	char accountNum[MAX_WORD_LENGTH];
 	char userName[MAX_WORD_LENGTH];
-	transInfo *transinfo[10]; //TODO : Segmantation fault ?—?Ÿ¬ ê³ ì¹˜ê¸?
-	char passwd[5];
-	int randNum;
+	transInfo *transinfo[10]; //TODO : Segmantation fault ?â€”Â?Å¸Â¬ ÃªÂ³Â Ã¬Â¹ËœÃªÂ¸?
+	char passwd[100];
+	int randNum[4];
 	int otp_Num;
 	int money;
 	int transCnt;
@@ -104,13 +105,13 @@ typedef struct treeNode
 	struct treeNode *right;
 } treeNode;
 
-// ?¬?¸?„° pê°? ê°?ë¦¬í‚¤?Š” ?…¸?“œ??? ë¹„êµ?•˜?—¬ ?•­ëª? keyë¥? ?‚½?ž…?•˜?Š” ?—°?‚°
+// ?ÂÂ¬?ÂÂ¸?â€žÂ° pÃªÂ°? ÃªÂ°?Ã«Â¦Â¬Ã­â€šÂ¤?Å â€ ?â€¦Â¸?â€œÅ“??? Ã«Â¹â€žÃªÂµÂ?â€¢Ëœ?â€”Â¬ ?â€¢Â­Ã«Âª? keyÃ«Â¥? ?â€šÂ½?Å¾â€¦?â€¢Ëœ?Å â€ ?â€”Â°?â€šÂ°
 treeNode *insertKey(treeNode *p, element key)
 {
 	treeNode *newNode;
 	int compare;
 
-	// ?‚½?ž…?•  ?žë¦¬ì— ?ƒˆ ?…¸?“œë¥? êµ¬ì„±?•˜?—¬ ?—°ê²?
+	// ?â€šÂ½?Å¾â€¦?â€¢Â  ?Å¾ÂÃ«Â¦Â¬Ã¬â€”Â ?Æ’Ë† ?â€¦Â¸?â€œÅ“Ã«Â¥? ÃªÂµÂ¬Ã¬â€žÂ±?â€¢Ëœ?â€”Â¬ ?â€”Â°ÃªÂ²?
 	if (p == NULL)
 	{
 		newNode = (treeNode *)malloc(sizeof(treeNode));
@@ -119,7 +120,7 @@ treeNode *insertKey(treeNode *p, element key)
 		newNode->right = NULL;
 		return newNode;
 	}
-	// ?´ì§? ?Š¸ë¦¬ì—?„œ ?‚½?ž…?•  ?žë¦? ?ƒ?ƒ‰
+	// ?ÂÂ´Ã¬Â§? ?Å Â¸Ã«Â¦Â¬Ã¬â€”Â?â€žÅ“ ?â€šÂ½?Å¾â€¦?â€¢Â  ?Å¾ÂÃ«Â¦? ?Æ’Â?Æ’â€°
 	else
 	{
 		compare = strcmp(key.accountNum, p->key.accountNum);
@@ -128,9 +129,9 @@ treeNode *insertKey(treeNode *p, element key)
 		else if (compare > 0)
 			p->right = insertKey(p->right, key);
 		else
-			printf("\n ?´ë¯? ê°™ì?? ë²ˆí˜¸ë¡? ?“±ë¡ëœ ê³„ì¢Œê°? ?žˆ?Šµ?‹ˆ?‹¤. \n");
+			printf("\n ?ÂÂ´Ã«Â¯? ÃªÂ°â„¢Ã¬?? Ã«Â²Ë†Ã­ËœÂ¸Ã«Â¡? ?â€œÂ±Ã«Â¡ÂÃ«ÂÅ“ ÃªÂ³â€žÃ¬Â¢Å’ÃªÂ°? ?Å¾Ë†?Å Âµ?â€¹Ë†?â€¹Â¤. \n");
 
-		return p; // ?‚½?ž…?•œ ?žë¦? ë°˜í™˜
+		return p; // ?â€šÂ½?Å¾â€¦?â€¢Å“ ?Å¾ÂÃ«Â¦? Ã«Â°ËœÃ­â„¢Ëœ
 	}
 }
 
@@ -139,7 +140,7 @@ void insert(treeNode **root, element key)
 	*root = insertKey(*root, key);
 }
 
-// root ?…¸?“œë¶??„° ?ƒ?ƒ‰?•˜?—¬ key??? ê°™ì?? ?…¸?“œë¥? ì°¾ì•„ ?‚­? œ?•˜?Š” ?—°?‚°
+// root ?â€¦Â¸?â€œÅ“Ã«Â¶??â€žÂ° ?Æ’Â?Æ’â€°?â€¢Ëœ?â€”Â¬ key??? ÃªÂ°â„¢Ã¬?? ?â€¦Â¸?â€œÅ“Ã«Â¥? Ã¬Â°Â¾Ã¬â€¢â€ž ?â€šÂ­?Â Å“?â€¢Ëœ?Å â€ ?â€”Â°?â€šÂ°
 void deleteNode(treeNode *root, element key)
 {
 	treeNode *parent, *p, *succ, *succ_parent;
@@ -154,13 +155,13 @@ void deleteNode(treeNode *root, element key)
 		else
 			p = p->right;
 	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?—†?Š” ê²½ìš°
+	// ?â€šÂ­?Â Å“?â€¢Â  ?â€¦Â¸?â€œÅ“ÃªÂ°? ?â€”â€ ?Å â€ ÃªÂ²Â½Ã¬Å¡Â°
 	if (p == NULL)
 	{
-		printf("\n ?‚­? œ?•  ê³„ì¢Œê°? ?“±ë¡ë˜?–´ ?žˆì§? ?•Š?Šµ?‹ˆ?‹¤. \n");
+		printf("\n ?â€šÂ­?Â Å“?â€¢Â  ÃªÂ³â€žÃ¬Â¢Å’ÃªÂ°? ?â€œÂ±Ã«Â¡ÂÃ«ÂËœ?â€“Â´ ?Å¾Ë†Ã¬Â§? ?â€¢Å ?Å Âµ?â€¹Ë†?â€¹Â¤. \n");
 		return;
 	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?‹¨ë§? ?…¸?“œ?¸ ê²½ìš°
+	// ?â€šÂ­?Â Å“?â€¢Â  ?â€¦Â¸?â€œÅ“ÃªÂ°? ?â€¹Â¨Ã«Â§? ?â€¦Â¸?â€œÅ“?ÂÂ¸ ÃªÂ²Â½Ã¬Å¡Â°
 	if ((p->left == NULL) && (p->right == NULL))
 	{
 		if (parent != NULL)
@@ -173,7 +174,7 @@ void deleteNode(treeNode *root, element key)
 		else
 			root = NULL;
 	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?•œ ê°? ê°?ì§? ê²½ìš°
+	// ?â€šÂ­?Â Å“?â€¢Â  ?â€¦Â¸?â€œÅ“ÃªÂ°? ?Å¾Â?â€¹Â ?â€¦Â¸?â€œÅ“Ã«Â¥? ?â€¢Å“ ÃªÂ°? ÃªÂ°?Ã¬Â§? ÃªÂ²Â½Ã¬Å¡Â°
 	else if ((p->left == NULL) || (p->right == NULL))
 	{
 		if (p->left != NULL)
@@ -190,7 +191,7 @@ void deleteNode(treeNode *root, element key)
 		else
 			root = child;
 	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?‘ ê°? ê°?ì§? ê²½ìš°
+	// ?â€šÂ­?Â Å“?â€¢Â  ?â€¦Â¸?â€œÅ“ÃªÂ°? ?Å¾Â?â€¹Â ?â€¦Â¸?â€œÅ“Ã«Â¥? ?â€˜Â ÃªÂ°? ÃªÂ°?Ã¬Â§? ÃªÂ²Â½Ã¬Å¡Â°
 	else
 	{
 		succ_parent = p;
@@ -210,7 +211,7 @@ void deleteNode(treeNode *root, element key)
 	free(p);
 }
 
-// ?´ì§? ?ƒ?ƒ‰ ?Š¸ë¦¬ì—?„œ ?‚¤ê°’ì´ key?¸ ?…¸?“œ ?œ„ì¹˜ë?? ?ƒ?ƒ‰?•˜?Š” ?—°?‚°
+// ?ÂÂ´Ã¬Â§? ?Æ’Â?Æ’â€° ?Å Â¸Ã«Â¦Â¬Ã¬â€”Â?â€žÅ“ ?â€šÂ¤ÃªÂ°â€™Ã¬ÂÂ´ key?ÂÂ¸ ?â€¦Â¸?â€œÅ“ ?Å“â€žÃ¬Â¹ËœÃ«?? ?Æ’Â?Æ’â€°?â€¢Ëœ?Å â€ ?â€”Â°?â€šÂ°
 treeNode *searchBST(treeNode *root, element key)
 {
 	treeNode *p;
@@ -225,7 +226,7 @@ treeNode *searchBST(treeNode *root, element key)
 			p = p->right;
 		else
 		{
-			printf("\nì°¾ì?? ê³„ì¢Œ : %s", p->key.accountNum);
+			printf("\nÃ¬Â°Â¾Ã¬?? ÃªÂ³â€žÃ¬Â¢Å’ : %s", p->key.accountNum);
 			return p;
 		}
 	}
@@ -254,6 +255,20 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
+
+void dec(int* key, char* str, char* dec_pw){
+	int i;
+	for (i = 0; i < 4; i++){
+		dec_pw[i] = str[i * 5] - key[i]; //the key for encryption is 3 that is subtracted to ASCII value
+		if(dec_pw[i] == '0'){
+			if((key[i] % 10) == 0)
+				dec_pw[i] = (key[i] % 10) + 49;
+			else
+				dec_pw[i] = (key[i] % 10) + 48;
+		}
+	}
+	printf("\nDecrypted pw is %s\n", dec_pw);
+}
 
 void *getTouch(void *data)
 {
@@ -307,6 +322,13 @@ void *getTouch(void *data)
 void *mainThread(void *data)
 {
 	char *thread_name = (char *)data;
+
+	char dec_pw[5];
+	int passwd;
+	int rannum;
+	int j;
+	char temp_str[5];
+	int temp_rand;
 
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
@@ -882,11 +904,109 @@ void *mainThread(void *data)
 						printf("\n%s", temp->key.userName);
 						printf("\n%s", temp->key.accountNum);
 						step = SELECTSTEP;
-					}else;
+					}else{
+						
+					}
 				}
 			}
 		}
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+        /*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if (step == PASSWDSTEP)     //read fnd & dip switch input to authorize account
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+
+				
+
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"ACCOUNT NUMBER", 14, 6, 9, 10, 2);
+					draw_string(880, 80, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
+					draw_string(880, 140, (char *)"PASSWORD", 8, 6, 9, 10, 2);
+					draw_string(880, 180, e.passwd, strlen(e.passwd), 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"S", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			while (1)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = 0;
+					break;
+				}
+			}
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
@@ -1261,8 +1381,52 @@ void *mainThread(void *data)
 					strcat(e.accountNum, tmp2);
 					e.money = 500000;
 					e.transCnt = 0;
-					tmp = system("./prng");
-					sprintf(e.passwd, "%d", tmp);
+
+					/*****Encrypt Passwd*****/
+
+					passwd = system("./prng");
+					if (passwd > 9999)
+						passwd /= 10;
+
+					sprintf(e.passwd, "%d", passwd);
+
+					for(int j = 0; j < 3; j++){
+						passwd = system("./prng");
+						if (passwd > 9999)
+							passwd /= 10;
+
+
+						sprintf(temp_str, "%d", passwd);
+
+						strcat(e.passwd, temp_str);
+					}
+
+					printf("\nStr : %s\n", e.passwd);
+					rannum = system("./prng");
+
+					if (rannum > 9999)
+						rannum /= 10;
+
+					printf("\n%d\n", rannum);
+
+					e.randNum[0] = (rannum % 10) * 10 + (rannum % 10);
+					e.randNum[1] = (rannum / 10)%100;
+					e.randNum[2] = (rannum / 100);
+					e.randNum[3] = (rannum / 1000) * 10 + (rannum / 1000);
+
+					for(j = 0; j < 4; j++){
+						if(e.randNum[j] > 37)
+							e.randNum[j] %= 10;
+						printf("rand is : %d ", e.randNum[j]);
+					}
+
+					for (j = 0; (j < 100 && e.passwd[j] != '\0'); j++)
+						e.passwd[j] = e.passwd[j] + e.randNum[j % 4]; //the key for encryption is 3 that is added to ASCII value
+
+					printf("\nEncrypted string: %s\n", e.passwd);
+
+					/*****Initialize Transinfo*****/
+
 					for (int i = 0; i < 10; i++)
 					{
 						e.transinfo[i] = (transInfo *)malloc(sizeof(transInfo));
@@ -1302,6 +1466,10 @@ void *mainThread(void *data)
 				int secs = 10;
 				int xloc = 1;
 				int yloc = 1;
+
+				/*****Decrypt Passwd*****/
+				dec(e.randNum, e.passwd, dec_pw);
+
 				for (int i = 1; i < 3; i++)
 				{
 					// change page to draw to (between 0 and 1)
@@ -1313,7 +1481,7 @@ void *mainThread(void *data)
 					draw_string(880, 40, (char *)"ACCOUNT NUMBER", 14, 6, 9, 10, 2);
 					draw_string(880, 80, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
 					draw_string(880, 140, (char *)"PASSWORD", 8, 6, 9, 10, 2);
-					draw_string(880, 180, e.passwd, strlen(e.passwd), 6, 9, 10, 2);
+					draw_string(880, 180, dec_pw, strlen(dec_pw), 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
@@ -1455,12 +1623,20 @@ void *mainThread(void *data)
 					y = 0;
 					step = 0;
 				}
-				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				if (x >= 430 && x <= 670 && y >= 90 && y <= 150)
 				{
 					clrcnt = 0;
 					x = 0;
 					y = 0;
-					step = 0;
+					step = CHECKBALANCESTEP;
+					break;
+				}
+				if (x >= 430 && x <= 870 && y >= 240 && y <= 300)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = CHECKHISTORYSTEP;
 					break;
 				}
 				else if (x >= 430 && x <= 520 && y >= 390 && y <= 460)
@@ -1468,7 +1644,7 @@ void *mainThread(void *data)
 					clrcnt = 0;
 					x = 0;
 					y = 0;
-					step = 4;
+					step = CHECKSENDSTEP;
 					break;
 				}
 			}
@@ -1482,7 +1658,7 @@ void *mainThread(void *data)
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
-		if (step == 4)
+		if (step == CHECKSENDSTEP)
 		{
 			screensize = finfo.smem_len;
 			fbp = (char *)mmap(0,
@@ -1509,20 +1685,20 @@ void *mainThread(void *data)
 					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
-					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
-					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
-					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
-					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
-
-					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
-					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
-					draw_string(500, 200, (char *)"D", 1, 6, 9, 10, 2);
+					
+					draw_string(200, 20, (char *)"ENTER ACC NUM", 11, 65535, 9, 10, 2);
+					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
+					draw_string(400, 60, (char *)"2", 1, 6, 9, 10, 2);
+					draw_string(300, 60, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(500, 60, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(400, 110, (char *)"5", 1, 6, 9, 10, 2);
+					draw_string(300, 110, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(500, 110, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(400, 160, (char *)"8", 1, 6, 9, 10, 2);
+					draw_string(300, 160, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(500, 160, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(300, 210, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(400, 210, (char *)"0", 1, 6, 9, 10, 2);
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
@@ -1683,17 +1859,274 @@ void *mainThread(void *data)
 
 //TODO : Make Main Thread.
 
-/*TODO : fnd Ãâ·Â, Çª½Ã¹öÆ° ÀÔ·Â(1~9±îÁö), dip½ºÀ§Ä¡ ÀÔ·Â, ÅØ½ºÆ® lcdÃâ·Â, 
-		 ºÎÀú Ãâ·Â, ¼­º¸¸ðÅÍ, º£ÆÃ, ÄûÁî ¹®Á¦(Çì´õ)
+/*TODO : fnd ÃƒÃ¢Â·Ã‚, Ã‡ÂªÂ½ÃƒÂ¹Ã¶Ã†Â° Ã€Ã”Â·Ã‚(1~9Â±Ã®ÃÃ¶), dipÂ½ÂºÃ€Â§Ã„Â¡ Ã€Ã”Â·Ã‚, Ã…Ã˜Â½ÂºÃ†Â® lcdÃƒÃ¢Â·Ã‚, 
+		 ÂºÃŽÃ€Ãº ÃƒÃ¢Â·Ã‚, Â¼Â­ÂºÂ¸Â¸Ã°Ã…Ã, ÂºÂ£Ã†Ãƒ, Ã„Ã»ÃÃ® Â¹Â®ÃÂ¦(Ã‡Ã¬Â´Ãµ)
 */
+
+#define password_section 1
+#define otp_section	2
+
+int section;
+void *fpgaThread(void *data)
+{
+	char *thread_name = (char *)data;
+	int password;
+
+	int data[5] = {0}, i, otp_int, dip_int;
+	char data_str[5] = {'0', '0', '0', '0', '0'};
+	char value[4];
+	char otp_bi[16], dip_bi[16];
+	char *mat = "MATCH!";
+	char *dis_mat = "DISMATCH!";
+
+	#define password_section 1
+	#define otp_section 2
+
+	dev_fnd = open(FND_DEVICE, O_RDWR);
+	dev_push_switch = open(PUSH_SWITCH_DEVICE, O_RDONLY);
+	dev_step_motor = open(STEP_MOTOR_DEVICE, O_WRONLY);
+	dev_buzzer = open(BUZZER_DEVICE, O_RDWR);
+	dev_text_lcd = open(TEXT_LCD_DEVICE, O_WRONLY);
+	dev_dip_switch = open(DIP_SWITCH_DEVICE, O_RDONLY);
+
+	while(1)
+	{
+		switch(section){
+			case password_section: 
+				for(i = 0; i < 5; i++)
+				{
+					data[i] = push_switch();
+					sprintf(data_str, "%d%d%d%d%d", data[0], data[1], data[2], data[3], data[4]);
+					fnd(data_str);
+				}
+				for(i = 0; i < 4; i++)
+					sprintf(value, "%d%d%d%d",data[0], data[1], data[2], data[3]);
+				printf("%s\n", value);
+				reset_fnd();
+				if(password == key->passowd)
+				{
+					step_motor(1, 1, 5);
+					sleep(3);
+					step_motor(0, 1, 5);
+				}
+				else
+					buzzer(2);
+				break;
+			
+			case otp_section:
+				otp_int = otp_num();
+				sprintf(otp_bi, "%s", intToBinary(otp_int));
+				text_lcd(otp_bi, "");
+	
+				dip_int = dip_switch();
+				sprintf(dip_bi, "%s", intToBinary(dip_int));
+				if(dip_int == otp_int)	
+				{
+					text_lcd(mat, dip_bi);
+					step_motor(1, 1, 5);
+					sleep(3);
+					step_motor(0, 1, 5);
+				}
+				else 
+				{
+					text_lcd(dis_mat, dip_bi);
+					buzzer(2);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	close(dev_fnd);
+	close(dev_push_switch);
+	close(dev_step_motor);
+	close(dev_buzzer);
+	close(dev_text_lcd);
+	close(dev_dip_switch);
+}
+
+void fnd(char* str) {
+	int j;
+	unsigned char data[4];
+	ssize_t ret;
+
+	memset(data, 0, sizeof(data));
+
+	for(j = 0; j < 4; j++)
+		data[j] = str[j] - '0';
+	
+	ret = write(dev_fnd, data, FND_MAX_DIGIT);
+
+	sleep(1);
+
+	memset(data, 0, sizeof(data));
+	ret = read(dev_fnd, data, FND_MAX_DIGIT);
+
+}
+
+void reset_fnd(){
+	int j;
+	unsigned char data[4] = {0};
+	ssize_t ret;
+
+	memset(data, 0, sizeof(data));
+
+	ret = write(dev_fnd, data, FND_MAX_DIGIT);
+
+	sleep(1);
+
+	memset(data, 0, sizeof(data));
+	ret = read(dev_fnd, data, FND_MAX_DIGIT);
+}
+
+int push_switch(void) {
+	unsigned char push_sw_buf[PUSH_SWITCH_MAX_BUTTON];
+	int i, data, quit = 0;
+
+	while (!quit) 
+	{
+		read(dev_push_switch, &push_sw_buf, sizeof(push_sw_buf));
+		for(i = 0; i < PUSH_SWITCH_MAX_BUTTON; i++)
+		{
+			if(push_sw_buf[i])
+			{
+				data = i + 1;
+				quit = 1;
+			}
+		}
+	}
+	return data;
+}
+
+void step_motor(unsigned char action, unsigned char dir, unsigned char speed) {
+	unsigned char state[3];
+
+	memset(state, 0, sizeof(state));
+	state[0] = (unsigned char)action;
+	state[1] = (unsigned char)dir;
+	state[2] = (unsigned char)speed;
+	
+	write(dev_step_motor, state, 3);
+}
+
+void buzzer(int cnt) {
+	unsigned char state;
+	int count;
+
+	state = BUZZER_OFF;
+	//while (count < cnt*2) {
+	for(count = 1; count <= (cnt*2)+1; count++)
+	{
+		state = BUZZER_TOGGLE(state);
+		write(dev_buzzer, &state, 1);
+		//count++;
+		sleep(1);
+	}
+}
+
+void text_lcd(char *first, char *second)
+{
+	int i;
+	int str_size;
+	unsigned char string[32];
+	
+	memset(string,0,sizeof(string));
+	
+	str_size=strlen(first);
+	if(str_size>0) {
+		strncat(string,first,str_size);
+		memset(string+str_size,' ',TEXT_LCD_LINE_BUF-str_size);
+	}
+	
+	str_size=strlen(second);
+	if(str_size>0) {
+		strncat(string,second,str_size);
+		memset(string+TEXT_LCD_LINE_BUF+str_size,' ',TEXT_LCD_LINE_BUF-str_size);
+	}
+	write(dev_text_lcd,string,TEXT_LCD_MAX_BUF);
+}
+
+int otp_num(void)
+{
+	int rand_num = 0;
+	rand_num = system("./prng");
+	if(rand_num<0)
+		rand_num = -rand_num;
+	rand_num%=255;
+
+	printf("%d\n", rand_num);
+	return rand_num;
+}
+
+char *intToBinary(int i) 
+{
+	static char s[8];
+	int count = 8;
+
+	do { s[--count] = '0' + (char) (i & 1);
+		i = i >> 1;
+	} while (count);
+	return s;
+}
+
+int dip_switch(void) {
+	int dip_sw_buf = 0;
+	int quit = 0;
+
+	while (!quit) {
+		if(push_switch()) quit = 1;
+	}
+	read(dev_dip_switch, &dip_sw_buf, 1);
+	dip_sw_buf = 255 - dip_sw_buf;
+	printf("%d\n", dip_sw_buf);
+	return dip_sw_buf;
+}
+
+double betting(double i)
+{
+	double prof_los = 0;
+	int rand_num = system("./prng");
+	if(rand_num<0)
+		rand_num = -rand_num;
+	rand_num %= 100;
+	if(rand_num > 97) prof_los = 10;
+	else if(rand_num < 97 && rand_num > 95) prof_los = 9;
+	else if(rand_num < 95 && rand_num > 93) prof_los = 8;
+	else if(rand_num < 93 && rand_num > 91) prof_los = 7;
+	else if(rand_num < 91 && rand_num > 89) prof_los = 6;
+	else if(rand_num < 89 && rand_num > 87) prof_los = 5;
+	else if(rand_num < 87 && rand_num > 85) prof_los = 4;
+	else if(rand_num < 85 && rand_num > 83) prof_los = 3;
+	else if(rand_num < 83 && rand_num > 80) prof_los = 2;
+	else if(rand_num < 80 && rand_num > 50) prof_los = 1;
+	else if(rand_num < 50 && rand_num > 30) prof_los = 0.9;
+	else if(rand_num < 30 && rand_num > 25) prof_los = 0.8;
+	else if(rand_num < 25 && rand_num > 22) prof_los = 0.7;
+	else if(rand_num < 22 && rand_num > 18) prof_los = 0.6;
+	else if(rand_num < 18 && rand_num > 15) prof_los = 0.5;
+	else if(rand_num < 15 && rand_num > 12) prof_los = 0.4;
+	else if(rand_num < 12 && rand_num > 9) prof_los = 0.3;
+	else if(rand_num < 9 && rand_num > 5) prof_los = 0.2;
+	else prof_los = 0.1;
+
+	printf("ë°°íŒ…ê¸ˆì•¡ : %.1f\n", i);
+	i *= prof_los;
+
+	printf("ë°°íŒ…ê²°ê³¼ : %.1f\n", i);
+
+	return i;
+}
+
 int main()
 {
 
 	pthread_t p_thread[2];
 	int thr_id;
 	int status;
-	char p1[] = "thread_1"; // 1¹ø ¾²·¹µå ÀÌ¸§
-	char pM[] = "thread_m"; // ¸ÞÀÎ ¾²·¹µå ÀÌ¸§
+	char p1[] = "thread_1"; // 1Å¡Å™ Å¾Ë›Ë‡Å¡Ä¾Äº Å”ÄšÂ¸Â§
+	char pM[] = "thread_m"; // Â¸Å¢Å”ÃŽ Å¾Ë›Ë‡Å¡Ä¾Äº Å”ÄšÂ¸Â§
+	char pfpga[] = "thread_fpga";
 
 	pthread_mutex_init(&mtx, NULL);
 
@@ -1715,8 +2148,17 @@ int main()
 		exit(0);
 	}
 
+	thr_id = pthread_create(&p_thread[2], NULL, fpga, (void *)pfpga);
+
+	if (thr_id < 0)
+	{
+		printf("thread create error : fpgaThread");
+		exit(0);
+	}
+
 	pthread_join(p_thread[0], (void *)&status);
 	pthread_join(p_thread[1], (void *)&status);
+	pthread_join(p_thread[2], (void *)&status);
 
 	return 0;
 }
