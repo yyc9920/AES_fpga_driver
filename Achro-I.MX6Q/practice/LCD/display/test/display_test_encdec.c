@@ -75,6 +75,11 @@
 #define DELACCSTEP 8
 #define SHOWACCINFOSTEP 9
 #define PASSWDSTEP 10
+#define MONEYSTEP 11
+
+
+#define LBALERT 12
+#define SENDALERT 13
 
 /********Data Structure Define Starts Here*********/
 
@@ -333,7 +338,10 @@ void *mainThread(void *data)
 	struct fb_var_screeninfo orig_vinfo;
 	long int screensize = 0;
 
+	char tmp_money[8];
+
 	element e;
+	//temp is for my acc, temp2 is for opponent's acc
 	treeNode *root = NULL, *temp = NULL, *temp2 = NULL;
 	int tmp;
 	char tmp2[10];
@@ -1543,6 +1551,172 @@ void *mainThread(void *data)
 		//-----------------------------------------------------------graphics loop here
 
 		//	draw();
+		if (step == LBALERT)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+
+				/*****Decrypt Passwd*****/
+				dec(e.randNum, e.passwd, dec_pw);
+
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"ALERT",5, 6, 9, 10, 2);
+					draw_string(880, 80, (char *)"ALERT",5, 250, 9, 10, 2);
+					draw_string(880, 120, (char *)"ALERT",5, 2250, 9, 10, 2);
+					draw_string(500, 180, (char *)"LACK OF BALANCE ALERT", 21, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			sleep(3);
+			step = MONEYSTEP;
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if (step == SENDALERT)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+
+				/*****Decrypt Passwd*****/
+				dec(e.randNum, e.passwd, dec_pw);
+
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					draw_string(880, 40, (char *)"ALERT",5, 6, 9, 10, 2);
+					draw_string(880, 80, (char *)"ALERT",5, 250, 9, 10, 2);
+					draw_string(880, 120, (char *)"ALERT",5, 2250, 9, 10, 2);
+					draw_string(400, 180, tmp_money, strlen(tmp_money), 2250, 9, 10, 2);
+					draw_string(800, 180, (char *)"SEND SUCCESSFULLY", 17, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			sleep(3);
+			tmp_money[0] = '\0';
+			step = 0;
+		}
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
 		if (step == SELECTSTEP)
 		{
 			screensize = finfo.smem_len;
@@ -1644,6 +1818,7 @@ void *mainThread(void *data)
 					clrcnt = 0;
 					x = 0;
 					y = 0;
+					e.accountNum[0] = '\0';
 					step = CHECKSENDSTEP;
 					break;
 				}
@@ -1686,20 +1861,26 @@ void *mainThread(void *data)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					
-					draw_string(200, 20, (char *)"ENTER ACC NUM", 11, 65535, 9, 10, 2);
+					draw_string(200, 10, (char *)"ENTER ACC NUM", 13, 65535, 9, 10, 2);
 					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
-					draw_string(400, 60, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 60, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 60, (char *)"3", 1, 6, 9, 10, 2);
-					draw_string(400, 110, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 110, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 110, (char *)"6", 1, 6, 9, 10, 2);
-					draw_string(400, 160, (char *)"8", 1, 6, 9, 10, 2);
-					draw_string(300, 160, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 160, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(300, 210, (char *)"00", 2, 6, 9, 10, 2);
-					draw_string(400, 210, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
+					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
+					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+
+					drawline(600, 290, 1480, 290);
+					drawline(600, 291, 1480, 291);
+					drawline(600, 292, 1480, 292);
+					drawline(600, 293, 1480, 293);
+					draw_string(620, 255, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
 					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -1736,7 +1917,227 @@ void *mainThread(void *data)
 			}
 
 			//step backwarwd to step 0
-			while (1)
+			if (step == CHECKSENDSTEP)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					e.accountNum[0] = '\0';
+					step = 0;
+				}
+				else if (y >= 100 - 5 && y <= 165)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "1");
+						else
+							strcat(e.accountNum, "1");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "2");
+						else
+							strcat(e.accountNum, "2");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "3");
+						else
+							strcat(e.accountNum, "3");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (y >= 200 - 5 && y <= 265)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "4");
+						else
+							strcat(e.accountNum, "4");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "5");
+						else
+							strcat(e.accountNum, "5");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "6");
+						else
+							strcat(e.accountNum, "6");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (y >= 300 - 5 && y <= 365)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "7");
+						else
+							strcat(e.accountNum, "7");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "8");
+						else
+							strcat(e.accountNum, "8");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (e.accountNum == NULL)
+							strcpy(e.accountNum, "9");
+						else
+							strcat(e.accountNum, "9");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				{
+					if (e.accountNum == NULL)
+						strcpy(e.accountNum, "0");
+					else
+						strcat(e.accountNum, "0");
+					x = 0;
+					y = 0;
+				}
+				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					temp2 = searchBST(root, e);
+					if (temp2 != NULL)
+					{
+						printf("\n%s", temp2->key.userName);
+						step = MONEYSTEP;
+					}else{
+						
+					}
+				}
+			}
+		}
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if (step == MONEYSTEP)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					
+					draw_string(200, 10, (char *)"SEND MONEY", 10, 65535, 9, 10, 2);
+					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
+					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
+					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+
+					drawline(600, 290, 1480, 290);
+					drawline(600, 291, 1480, 291);
+					drawline(600, 292, 1480, 292);
+					drawline(600, 293, 1480, 293);
+					draw_string(620, 255, tmp_money, strlen(tmp_money), 6, 9, 10, 2);
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+			
+			printf("\nMONEYSTEP test\n");
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			if (step == MONEYSTEP)
 			{
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
@@ -1744,12 +2145,134 @@ void *mainThread(void *data)
 					x = 0;
 					y = 0;
 					step = 0;
-					break;
+				}
+				else if (y >= 100 - 5 && y <= 165)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "1");
+						else
+							strcat(tmp_money, "1");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "2");
+						else
+							strcat(tmp_money, "2");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "3");
+						else
+							strcat(tmp_money, "3");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (y >= 200 - 5 && y <= 265)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "4");
+						else
+							strcat(tmp_money, "4");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "5");
+						else
+							strcat(tmp_money, "5");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "6");
+						else
+							strcat(tmp_money, "6");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (y >= 300 - 5 && y <= 365)
+				{
+					if (x >= 150 - 5 && x <= 160 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "7");
+						else
+							strcat(tmp_money, "7");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 200 - 5 && x <= 210 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "8");
+						else
+							strcat(tmp_money, "8");
+						x = 0;
+						y = 0;
+					}
+					else if (x >= 250 - 5 && x <= 260 + 5)
+					{
+						if (tmp_money == NULL)
+							strcpy(tmp_money, "9");
+						else
+							strcat(tmp_money, "9");
+						x = 0;
+						y = 0;
+					}
+				}
+				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				{
+					if (tmp_money == NULL)
+						strcpy(tmp_money, "0");
+					else
+						strcat(tmp_money, "0");
+					x = 0;
+					y = 0;
+				}
+				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					e.money = atoi(tmp_money);
+
+					if(temp->key.money < e.money)
+						step = LBALERT;
+
+
+					temp2->key.money = temp2->key.money + e.money;
+					strcpy(temp2->key.transinfo[temp2->key.transCnt]->transName, temp->key.userName);
+					temp2->key.transinfo[temp2->key.transCnt]->money = e.money;
+					temp2->key.transCnt++;
+
+					temp->key.money = temp->key.money - e.money;
+					strcpy(temp->key.transinfo[temp->key.transCnt]->transName, temp2->key.userName);
+					temp->key.transinfo[temp->key.transCnt]->money = e.money;
+					temp->key.transCnt++;
+					
+					step = SENDALERT;
 				}
 			}
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
 
