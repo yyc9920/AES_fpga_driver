@@ -572,9 +572,8 @@ void *mainThread(void *data)
 					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
-					draw_string(880, 40, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
-					draw_string(880, 120, (char *)"LOG IN WITH YOUR ACCOUNT", 24, 6, 9, 10, 2);
-					draw_string(880, 200, (char *)"DELETE EXISTING ACCOUNT", 23, 6, 9, 10, 2);
+					draw_string(880, 80, (char *)"MAKE NEW ACCOUNT", 16, 6, 9, 10, 2);
+					draw_string(880, 160, (char *)"LOG IN WITH YOUR ACCOUNT", 24, 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"B", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"A", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"S", 1, 6, 9, 10, 2);
@@ -643,14 +642,6 @@ void *mainThread(void *data)
 					y = 0;
 					e.userName[0] = '\0';
 					step = MAKEACCSTEP;
-					break;
-				}
-				else if (x >= 430 && x <= 850 && y >= 390 && y <= 460)
-				{
-					clrcnt = 0;
-					x = 0;
-					y = 0;
-					step = DELACCSTEP;
 					break;
 				}
 			}
@@ -1815,8 +1806,14 @@ void *mainThread(void *data)
 					
 					draw_string(200, 10, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
 					draw_string(200, 50, (char *)"YOUR TRANSACTION HISTORY", 24, 6, 9, 10, 2);
-					sprintf(tmp2, "%d", temp->key.money);
-					draw_string(200, 90, tmp2, strlen(tmp2), 6, 9, 10, 2);
+					
+					for(int k=0; k<10; k++){
+						if(temp->key.transinfo[k]->money != 0){
+							sprintf(tmp2, "%d", temp->key.transinfo[k]->money);
+							draw_string(800, (80+(k*20)), tmp2, strlen(tmp2), 6, 9, 10, 1);
+							draw_string(200, (80+(k*20)), temp->key.transinfo[k]->transName, strlen(temp->key.transinfo[k]->transName), 6, 9, 10, 1);
+						}
+					}
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 
 					// switch page
@@ -1855,7 +1852,7 @@ void *mainThread(void *data)
 			}
 
 			//step backwarwd to step 0
-			if (step == CHECKBALANCESTEP)
+			if (step == CHECKHISTORYSTEP)
 			{
 				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
 				{
@@ -2400,111 +2397,6 @@ void *mainThread(void *data)
 					temp->key.transCnt++;
 					
 					step = SENDALERT;
-				}
-			}
-		}
-
-		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
-
-
-		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
-
-		// draw...
-		//-----------------------------------------------------------graphics loop here
-
-		//	draw();
-		if (step == 3)
-		{
-			screensize = finfo.smem_len;
-			fbp = (char *)mmap(0,
-							   screensize,
-							   PROT_READ | PROT_WRITE,
-							   MAP_SHARED,
-							   fbfd,
-							   0);
-			if ((int)fbp == -1)
-			{
-				printf("Failed to mmap\n");
-			}
-			else
-			{
-				int fps = 60;
-				int secs = 10;
-				int xloc = 1;
-				int yloc = 1;
-				for (int i = 1; i < 3; i++)
-				{
-					// change page to draw to (between 0 and 1)
-					cur_page = (cur_page + 1) % 2;
-					// clear the previous image (= fill entire screen)
-					if (clrcnt == 0)
-						clear_screen(0);
-					drawline(100, 400, xloc + 222, 555);
-					draw_string(500, 20, (char *)"CHECK TRANSACTION HISTORY", 25, 6, 9, 10, 2);
-					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
-					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
-					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
-					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
-					if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
-					{
-						clrcnt = 0;
-						step = 0;
-					}
-					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
-					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
-					draw_string(500, 200, (char *)"D", 1, 6, 9, 10, 2);
-					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
-					// switch page
-					vinfo.yoffset = cur_page * vinfo.yres;
-					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
-					// the call to waitforvsync should use a pointer to a variable
-					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
-					// so should be in fact like this:
-					__u32 dummy = 0;
-					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
-					// also should of course check the return values of the ioctl calls...
-					if (yloc >= vinfo.yres / 2)
-						yloc = 1;
-					if (xloc >= 100)
-						yloc = 1;
-					yloc++;
-					xloc++;
-				}
-				clrcnt = 1;
-				//-----------------------------------------------------------graphics loop here
-			}
-
-			// unmap fb file from memory
-			munmap(fbp, screensize);
-			// reset cursor
-			if (kbfd >= 0)
-			{
-				ioctl(kbfd, KDSETMODE, KD_TEXT);
-				// close kb file
-				close(kbfd);
-			}
-			// reset the display mode
-			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
-			{
-				printf("Error re-setting variable information.\n");
-			}
-
-			//step backwarwd to step 0
-			while (1)
-			{
-				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
-				{
-					clrcnt = 0;
-					x = 0;
-					y = 0;
-					step = 0;
-					break;
 				}
 			}
 		}
