@@ -1,51 +1,3 @@
-/*
- * display
- * The objective of this C program is to merely display text, lines and rectangles
- * on a screen using basic Linx Framebuffer routines. 
- * This is "text the hard way", where the characters are defined initially as arrays
- * of 1 and 0. While this is tedious, it allows much freedom for quick and dirty display
- * on the screen. The code can be pared back, removing characters that are never used by the program.
- * With arrays of 1 or 0 they can be easily modififed, and the color can be decided at print time. 
- * Note there is a "pre color " routine and a memory move version to display characters.  
- * These special routines might have some side effects. 
- * To show how to do smooth animation with number counting or display, some animation via "page flipping" 
- * is done, as derived from the original demo that this demo is built upon. 
- * There are wayt to put graphics to arrays, usually by reading monochrome bitmaps. So that makes it 
- * possible to build custom characters or fonts. The fonts in this demo are actually influenced from 
- * the sentry gun displays from Aliens https://www.youtube.com/watch?v=HQDy-5IQvuU
- *
- * compile with 'gcc -O2 -o display display.c'
- * run with './display'
- *
- * Additonal notes: 
- * - Take note of the "pixel depth" value. In this demo it's set at 8, meaning that 
- * it uses a color "range" defined by 0 to 15 in value. Be watchful of the system you are 
- * using and what it's capable of. If you go to a greater depth, you can use a larger variable
- * to carry a larger color value. It will slow the program down. This program was made with 
- * simpler systems in mind that might use a simpler and less capable TFT LCD or something 
- * of that nature. 
- * - It's important that this program restore the screen settings on exit. 
- * - This program demonstrates some minor animation effects merely to show that it's 
- * a possibility. But there is no "edge" checking routine for the screen buffer array. 
- * So as usual with programs like this, you can cause a segfault if you go out of bounds. 
- * - While a "space" character in both array sizes exists, the system on which this was 
- * tested was doing odd things with the array of 0s, and strange artifacts were appearing
- * in displayed text that had spaces. So the drawing routines for strings instead just 
- * move over instead of drawing a space. Performance on other sytems may vary. 
- * - This program was tested on a Raspberry Pi using a small HDMI screen. If using an extra
- * LCD screen such as the sort connected via SPI the buffer number may differ, such as 
- * "fb1" instead of "fb0".  
- * - The characters are hard-coded in a block and the arrays of pointers that point to them
- * put the pointer to the character in the respective ASCII value. This means they are 128
- * elements, but not all are occupied. This allows atoi conversions to be quicker but 
- * if less characters are needed other more efficient ways are possible. 
- * 
- * This demo is based on riginal work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
- * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part.html
- * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part_27.html
- *
- *
- */
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1821,6 +1773,187 @@ void *mainThread(void *data)
 					e.accountNum[0] = '\0';
 					step = CHECKSENDSTEP;
 					break;
+				}
+			}
+		}
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if (step == CHECKHISTORYSTEP)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					
+					draw_string(200, 10, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
+					draw_string(200, 50, (char *)"YOUR TRANSACTION HISTORY", 24, 6, 9, 10, 2);
+					sprintf(tmp2, "%d", temp->key.money);
+					draw_string(200, 90, tmp2, strlen(tmp2), 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			if (step == CHECKBALANCESTEP)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = 0;
+				}
+			}
+		}
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+
+		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		// draw...
+		//-----------------------------------------------------------graphics loop here
+
+		//	draw();
+		if (step == CHECKBALANCESTEP)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					if (clrcnt == 0)
+						clear_screen(0);
+					drawline(100, 400, xloc + 222, 555);
+					
+					draw_string(200, 10, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
+					draw_string(200, 50, (char *)"YOUR BALANCE", 12, 6, 9, 10, 2);
+					sprintf(tmp2, "%d", temp->key.money);
+					draw_string(200, 90, tmp2, strlen(tmp2), 6, 9, 10, 2);
+					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step backwarwd to step 0
+			if (step == CHECKBALANCESTEP)
+			{
+				if (x >= 800 && x <= 940 && y >= 0 && y <= 60)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = 0;
 				}
 			}
 		}
