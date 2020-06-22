@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 img = cv2.imread('images/money.jpg',0)
 
-img = cv2.resize(img, dsize=(0, 0), fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)
+img = cv2.resize(img, dsize=(0, 0), fx=0.8, fy=0.8, interpolation=cv2.INTER_AREA)
 
 get = []
 c = 0
