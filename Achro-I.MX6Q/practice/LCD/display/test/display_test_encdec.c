@@ -12,6 +12,8 @@
 #include <linux/ioctl.h>
 #include <signal.h>
 #include "display.h"
+#include "money.h"
+#include "locker.h"
 #include <pthread.h>
 // These are the sizes of the individual character arrays
 #define CHAR_ARR__29x24 696
@@ -24,11 +26,10 @@
 #define LOGINSTEP 5
 #define MAKEACCSTEP 6
 #define LOGACCSTEP 7
-#define DELACCSTEP 8
 #define SHOWACCINFOSTEP 9
 #define PASSWDSTEP 10
 #define MONEYSTEP 11
-
+#define DRAGMONEYSTEP 14
 
 #define LBALERT 12
 #define SENDALERT 13
@@ -62,7 +63,6 @@ typedef struct treeNode
 	struct treeNode *right;
 } treeNode;
 
-// ?¬?¸?„° pê°? ê°?ë¦¬í‚¤?Š” ?…¸?“œ??? ë¹„êµ?•˜?—¬ ?•­ëª? keyë¥? ?‚½?ž…?•˜?Š” ?—°?‚°
 treeNode *insertKey(treeNode *p, element key)
 {
 	treeNode *newNode;
@@ -97,78 +97,6 @@ void insert(treeNode **root, element key)
 	*root = insertKey(*root, key);
 }
 
-// root ?…¸?“œë¶??„° ?ƒ?ƒ‰?•˜?—¬ key??? ê°™ì?? ?…¸?“œë¥? ì°¾ì•„ ?‚­? œ?•˜?Š” ?—°?‚°
-void deleteNode(treeNode *root, element key)
-{
-	treeNode *parent, *p, *succ, *succ_parent;
-	treeNode *child;
-	parent = NULL;
-	p = root;
-	while ((p != NULL) && (strcmp(p->key.accountNum, key.accountNum) != 0))
-	{
-		parent = p;
-		if (strcmp(key.accountNum, p->key.accountNum) < 0)
-			p = p->left;
-		else
-			p = p->right;
-	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?—†?Š” ê²½ìš°
-	if (p == NULL)
-	{
-		printf("\n ?‚­? œ?•  ê³„ì¢Œê°? ?“±ë¡ë˜?–´ ?žˆì§? ?•Š?Šµ?‹ˆ?‹¤. \n");
-		return;
-	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?‹¨ë§? ?…¸?“œ?¸ ê²½ìš°
-	if ((p->left == NULL) && (p->right == NULL))
-	{
-		if (parent != NULL)
-		{
-			if (parent->left == p)
-				parent->left = NULL;
-			else
-				parent->right = NULL;
-		}
-		else
-			root = NULL;
-	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?•œ ê°? ê°?ì§? ê²½ìš°
-	else if ((p->left == NULL) || (p->right == NULL))
-	{
-		if (p->left != NULL)
-			child = p->left;
-		else
-			child = p->right;
-		if (parent != NULL)
-		{
-			if (parent->left == p)
-				parent->left = child;
-			else
-				parent->right = child;
-		}
-		else
-			root = child;
-	}
-	// ?‚­? œ?•  ?…¸?“œê°? ?ž?‹ ?…¸?“œë¥? ?‘ ê°? ê°?ì§? ê²½ìš°
-	else
-	{
-		succ_parent = p;
-		succ = p->right;
-		while (succ->left != NULL)
-		{
-			succ_parent = succ;
-			succ = succ->left;
-		}
-		if (succ_parent->left == succ)
-			succ_parent->left = succ->right;
-		else
-			succ_parent->right = succ->right;
-		p->key = succ->key;
-		p = succ;
-	}
-	free(p);
-}
-
-// ?´ì§? ?ƒ?ƒ‰ ?Š¸ë¦¬ì—?„œ ?‚¤ê°’ì´ key?¸ ?…¸?“œ ?œ„ì¹˜ë?? ?ƒ?ƒ‰?•˜?Š” ?—°?‚°
 treeNode *searchBST(treeNode *root, element key)
 {
 	treeNode *p;
@@ -197,6 +125,7 @@ pthread_mutex_t mtx;
 int step = 0;
 
 int x, y;
+int cont_cnt=0;
 
 int gtcnt = 0;
 int clrcnt = 0;
@@ -212,6 +141,8 @@ struct fb_fix_screeninfo finfo;
 // This is the heart of most of the drawing routines except where memory copy or move is used.
 // application entry point
 
+int cont_x;
+int cont_y;
 
 void dec(int* key, char* str, char* dec_pw){
 	int i;
@@ -271,6 +202,10 @@ void *getTouch(void *data)
 					 iev[0].type == 3 && iev[1].type == 3 && iev[2].type == 0)
 			{
 				printf("touching...\n");
+				if(iev[0].value != 0){
+					cont_x = iev[0].value;
+				}
+				cont_y = iev[1].value;
 			}
 		}
 	
@@ -489,6 +424,8 @@ void *mainThread(void *data)
 					draw_string(850, 100, (char *)"KIDEOK KIM", 10, 6, 0, 10, 1);
 					draw_string(805, 140, (char *)"B A S S", 7, 6, 0, 10, 2);
 					draw_string(880, 200, (char *)"START", 5, 6, 9, 10, 2);
+					draw_char(locker, 600, 125, 150, 50, 6);
+					draw_char(locker, 1160, 125, 150, 50, 6);
 
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
@@ -625,7 +562,7 @@ void *mainThread(void *data)
 					step = 0;
 					break;
 				}
-				else if (x >= 430 && x <= 880 && y >= 240 && y <= 300)
+				else if (x >= 430 && x <= 880 && y >= 300 && y <= 360)
 				{
 					clrcnt = 0;
 					x = 0;
@@ -635,7 +572,7 @@ void *mainThread(void *data)
 					step = LOGACCSTEP;
 					break;
 				}
-				else if (x >= 430 && x <= 740 && y >= 90 && y <= 150)
+				else if (x >= 430 && x <= 740 && y >= 160 && y <= 220)
 				{
 					clrcnt = 0;
 					x = 0;
@@ -681,14 +618,19 @@ void *mainThread(void *data)
 					if (clrcnt == 0)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
+					draw_string(200, 10, (char *)"ENTER YOUR ACCOUNT", 18, 65535, 9, 10, 2);
 					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(250, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(550, 50, (char *)"3", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(250, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(550, 100, (char *)"6", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
+					draw_string(250, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(550, 150, (char *)"9", 1, 6, 9, 10, 2);
+					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(550, 200, (char *)"D", 1, 6, 9, 10, 2);
 
 					drawline(600, 290, 1480, 290);
 					drawline(600, 291, 1480, 291);
@@ -696,9 +638,6 @@ void *mainThread(void *data)
 					drawline(600, 293, 1480, 293);
 					draw_string(620, 255, e.accountNum, strlen(e.accountNum), 6, 9, 10, 2);
 
-					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
@@ -745,9 +684,9 @@ void *mainThread(void *data)
 					y = 0;
 					step = 0;
 				}
-				else if (y >= 100 - 5 && y <= 165)
+				else if (y >= 100 - 10 && y <= 170)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "1");
@@ -756,7 +695,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "2");
@@ -765,7 +704,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "3");
@@ -775,7 +714,7 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 200 - 5 && y <= 265)
+				else if (y >= 200 - 10 && y <= 270)
 				{
 					if (x >= 150 - 5 && x <= 160 + 5)
 					{
@@ -786,7 +725,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "5");
@@ -795,7 +734,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "6");
@@ -805,9 +744,9 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 300 - 5 && y <= 365)
+				else if (y >= 300 - 10 && y <= 370)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "7");
@@ -816,7 +755,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "8");
@@ -825,7 +764,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "9");
@@ -835,12 +774,19 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				else if (x >= 200 - 10 && x <= 210 + 10 && y >= 400 - 10 && y <= 470)
 				{
 					if (e.accountNum == NULL)
 						strcpy(e.accountNum, "0");
 					else
 						strcat(e.accountNum, "0");
+					x = 0;
+					y = 0;
+				}
+				else if (x >= 275 - 10 && x <= 285 + 10 && y >= 400 - 10 && y <= 470)
+				{
+					e.accountNum[0] = '\0';
+					clrcnt = 0;
 					x = 0;
 					y = 0;
 				}
@@ -1335,6 +1281,7 @@ void *mainThread(void *data)
 
 					/*****Encrypt Passwd*****/
 
+					printf("\n\n/*****Encrypt Passwd*****/\n");
 					passwd = system("./prng");
 					if (passwd > 9999)
 						passwd /= 10;
@@ -1358,7 +1305,7 @@ void *mainThread(void *data)
 					if (rannum > 9999)
 						rannum /= 10;
 
-					printf("\n%d\n", rannum);
+					//printf("\n%d\n", rannum);
 
 					e.randNum[0] = (rannum % 10) * 10 + (rannum % 10);
 					e.randNum[1] = (rannum / 10)%100;
@@ -1368,13 +1315,14 @@ void *mainThread(void *data)
 					for(j = 0; j < 4; j++){
 						if(e.randNum[j] > 37)
 							e.randNum[j] %= 10;
-						printf("rand is : %d ", e.randNum[j]);
+						printf("\nrand %d is : %d\n", j+1 ,e.randNum[j]);
 					}
 
 					for (j = 0; (j < 100 && e.passwd[j] != '\0'); j++)
 						e.passwd[j] = e.passwd[j] + e.randNum[j % 4]; //the key for encryption is 3 that is added to ASCII value
 
 					printf("\nEncrypted string: %s\n", e.passwd);
+					printf("\n\n/*****Encrypt Passwd End*****/\n");
 
 					/*****Initialize Transinfo*****/
 
@@ -1804,18 +1752,28 @@ void *mainThread(void *data)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					
-					draw_string(200, 10, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
-					draw_string(200, 50, (char *)"YOUR TRANSACTION HISTORY", 24, 6, 9, 10, 2);
+					draw_string(50, 10, (char *)"BACK", 4, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"YOUR ACCOUNT", 12, 6, 9, 10, 2);
+					draw_string(1200, 50, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"YOUR TRANSACTION HISTORY", 24, 6, 9, 10, 2);
 					
 					for(int k=0; k<10; k++){
 						if(temp->key.transinfo[k]->money != 0){
 							sprintf(tmp2, "%d", temp->key.transinfo[k]->money);
-							draw_string(800, (80+(k*20)), tmp2, strlen(tmp2), 6, 9, 10, 1);
-							draw_string(200, (80+(k*20)), temp->key.transinfo[k]->transName, strlen(temp->key.transinfo[k]->transName), 6, 9, 10, 1);
+							draw_string(800, (120+(k*20)), tmp2, strlen(tmp2), 6, 9, 10, 1);
+							draw_string(400, (120+(k*20)), temp->key.transinfo[k]->transName, strlen(temp->key.transinfo[k]->transName), 6, 9, 10, 1);
 						}
 					}
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
+					drawline(590, 25, 590, 290);
+					drawline(591, 25, 591, 290);
+					drawline(592, 25, 592, 290);
+					drawline(593, 25, 593, 290);
 
+					drawline(1190, 50, 1190, 290);
+					drawline(1191, 50, 1191, 290);
+					drawline(1192, 50, 1192, 290);
+					drawline(1193, 50, 1193, 290);
 					// switch page
 					vinfo.yoffset = cur_page * vinfo.yres;
 					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
@@ -1860,6 +1818,12 @@ void *mainThread(void *data)
 					x = 0;
 					y = 0;
 					step = 0;
+				}else if (x >= 20 && x <= 200 && y >= 0 && y <= 100)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = SELECTSTEP;
 				}
 			}
 		}
@@ -1901,10 +1865,12 @@ void *mainThread(void *data)
 						clear_screen(0);
 					drawline(100, 400, xloc + 222, 555);
 					
-					draw_string(200, 10, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
-					draw_string(200, 50, (char *)"YOUR BALANCE", 12, 6, 9, 10, 2);
+					draw_string(50, 10, (char *)"BACK", 4, 6, 9, 10, 2);
+					draw_string(400, 50, (char *)"YOUR ACCOUNT", 12, 6, 9, 10, 2);
+					draw_string(1200, 50, temp->key.accountNum, strlen(temp->key.accountNum), 6, 9, 10, 2);
+					draw_string(400, 100, (char *)"YOUR BALANCE", 12, 6, 9, 10, 2);
 					sprintf(tmp2, "%d", temp->key.money);
-					draw_string(200, 90, tmp2, strlen(tmp2), 6, 9, 10, 2);
+					draw_string(1200, 100, tmp2, strlen(tmp2), 6, 9, 10, 2);
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 
 					// switch page
@@ -1951,7 +1917,14 @@ void *mainThread(void *data)
 					x = 0;
 					y = 0;
 					step = 0;
+				}else if (x >= 20 && x <= 200 && y >= 0 && y <= 100)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = SELECTSTEP;
 				}
+
 			}
 		}
 
@@ -1993,17 +1966,19 @@ void *mainThread(void *data)
 					
 					draw_string(200, 10, (char *)"ENTER ACC NUM", 13, 65535, 9, 10, 2);
 					draw_string(880, 120, (char *)"ENTER", 5, 6, 9, 10, 2);
+					draw_string(50, 250, (char *)"BACK", 4, 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(250, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(550, 50, (char *)"3", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(250, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(550, 100, (char *)"6", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
-					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(250, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(550, 150, (char *)"9", 1, 6, 9, 10, 2);
 					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(550, 200, (char *)"D", 1, 6, 9, 10, 2);
+
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 
 					drawline(600, 290, 1480, 290);
@@ -2057,9 +2032,9 @@ void *mainThread(void *data)
 					e.accountNum[0] = '\0';
 					step = 0;
 				}
-				else if (y >= 100 - 5 && y <= 165)
+				else if (y >= 100 - 10 && y <= 170)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "1");
@@ -2068,7 +2043,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "2");
@@ -2077,7 +2052,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "3");
@@ -2087,7 +2062,7 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 200 - 5 && y <= 265)
+				else if (y >= 200 - 10 && y <= 270)
 				{
 					if (x >= 150 - 5 && x <= 160 + 5)
 					{
@@ -2098,7 +2073,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "5");
@@ -2107,7 +2082,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "6");
@@ -2117,9 +2092,9 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 300 - 5 && y <= 365)
+				else if (y >= 300 - 10 && y <= 370)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "7");
@@ -2128,7 +2103,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "8");
@@ -2137,7 +2112,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (e.accountNum == NULL)
 							strcpy(e.accountNum, "9");
@@ -2147,7 +2122,7 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				else if (x >= 200 - 10 && x <= 210 + 10 && y >= 400 - 10 && y <= 470)
 				{
 					if (e.accountNum == NULL)
 						strcpy(e.accountNum, "0");
@@ -2156,6 +2131,14 @@ void *mainThread(void *data)
 					x = 0;
 					y = 0;
 				}
+				else if (x >= 275 - 10 && x <= 285 + 10 && y >= 400 - 10 && y <= 470)
+				{
+					e.accountNum[0] = '\0';
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+				}
+
 				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
 				{
 					clrcnt = 0;
@@ -2169,6 +2152,12 @@ void *mainThread(void *data)
 					}else{
 						
 					}
+				}else if (x >= 20 && x <= 200 && y >= 500 && y <= 590)
+				{
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+					step = SELECTSTEP;
 				}
 			}
 		}
@@ -2205,23 +2194,26 @@ void *mainThread(void *data)
 					// change page to draw to (between 0 and 1)
 					cur_page = (cur_page + 1) % 2;
 					// clear the previous image (= fill entire screen)
-					if (clrcnt == 0)
+					if (clrcnt == 0){
 						clear_screen(0);
+						sleep(0.1);
+					}
 					drawline(100, 400, xloc + 222, 555);
 					
 					draw_string(200, 10, (char *)"SEND MONEY", 10, 65535, 9, 10, 2);
 					draw_string(880, 120, (char *)"SEND", 4, 6, 9, 10, 2);
+					draw_string(50, 255, (char *)"BACK", 4, 6, 9, 10, 2);
 					draw_string(400, 50, (char *)"2", 1, 6, 9, 10, 2);
-					draw_string(300, 50, (char *)"1", 1, 6, 9, 10, 2);
-					draw_string(500, 50, (char *)"3", 1, 6, 9, 10, 2);
+					draw_string(250, 50, (char *)"1", 1, 6, 9, 10, 2);
+					draw_string(550, 50, (char *)"3", 1, 6, 9, 10, 2);
 					draw_string(400, 100, (char *)"5", 1, 6, 9, 10, 2);
-					draw_string(300, 100, (char *)"4", 1, 6, 9, 10, 2);
-					draw_string(500, 100, (char *)"6", 1, 6, 9, 10, 2);
+					draw_string(250, 100, (char *)"4", 1, 6, 9, 10, 2);
+					draw_string(550, 100, (char *)"6", 1, 6, 9, 10, 2);
 					draw_string(400, 150, (char *)"8", 1, 6, 9, 10, 2);
-					draw_string(300, 150, (char *)"7", 1, 6, 9, 10, 2);
-					draw_string(500, 150, (char *)"9", 1, 6, 9, 10, 2);
-					draw_string(300, 200, (char *)"00", 2, 6, 9, 10, 2);
+					draw_string(250, 150, (char *)"7", 1, 6, 9, 10, 2);
+					draw_string(550, 150, (char *)"9", 1, 6, 9, 10, 2);
 					draw_string(400, 200, (char *)"0", 1, 6, 9, 10, 2);
+					draw_string(550, 200, (char *)"D", 1, 6, 9, 10, 2);
 					draw_string(1650, 10, (char *)"BACK TO MAIN", 12, 6, 9, 10, 1);
 
 					drawline(600, 290, 1480, 290);
@@ -2249,8 +2241,6 @@ void *mainThread(void *data)
 				//-----------------------------------------------------------graphics loop here
 			}
 			
-			printf("\nMONEYSTEP test\n");
-
 			// unmap fb file from memory
 			munmap(fbp, screensize);
 			// reset cursor
@@ -2276,9 +2266,9 @@ void *mainThread(void *data)
 					y = 0;
 					step = 0;
 				}
-				else if (y >= 100 - 5 && y <= 165)
+				else if (y >= 100 - 10 && y <= 170)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "1");
@@ -2287,7 +2277,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "2");
@@ -2296,7 +2286,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "3");
@@ -2306,9 +2296,9 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 200 - 5 && y <= 265)
+				else if (y >= 200 - 10 && y <= 270)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "4");
@@ -2317,7 +2307,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "5");
@@ -2326,7 +2316,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "6");
@@ -2336,9 +2326,9 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (y >= 300 - 5 && y <= 365)
+				else if (y >= 300 - 10 && y <= 370)
 				{
-					if (x >= 150 - 5 && x <= 160 + 5)
+					if (x >= 125 - 10 && x <= 135 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "7");
@@ -2347,7 +2337,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 200 - 5 && x <= 210 + 5)
+					else if (x >= 200 - 10 && x <= 210 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "8");
@@ -2356,7 +2346,7 @@ void *mainThread(void *data)
 						x = 0;
 						y = 0;
 					}
-					else if (x >= 250 - 5 && x <= 260 + 5)
+					else if (x >= 275 - 10 && x <= 285 + 10)
 					{
 						if (tmp_money == NULL)
 							strcpy(tmp_money, "9");
@@ -2366,7 +2356,7 @@ void *mainThread(void *data)
 						y = 0;
 					}
 				}
-				else if (x >= 200 - 5 && x <= 210 + 5 && y >= 400 - 5 && y <= 465)
+				else if (x >= 200 - 10 && x <= 210 + 10 && y >= 400 - 10 && y <= 470)
 				{
 					if (tmp_money == NULL)
 						strcpy(tmp_money, "0");
@@ -2374,6 +2364,20 @@ void *mainThread(void *data)
 						strcat(tmp_money, "0");
 					x = 0;
 					y = 0;
+				}
+				else if (x >= 275 - 10 && x <= 285 + 10 && y >= 400 - 10 && y <= 470)
+				{
+					tmp_money[0] = '\0';
+					clrcnt = 0;
+					x = 0;
+					y = 0;
+				}else if (x >= 20 && x <= 200 && y >= 500 && y <= 590)
+				{
+					clrcnt = 0;
+					tmp_money[0] - '\0';
+					x = 0;
+					y = 0;
+					step = SELECTSTEP;
 				}
 				else if (x >= 430 && x <= 520 && y >= 240 - 5 && y <= 300 + 5)
 				{
@@ -2396,12 +2400,100 @@ void *mainThread(void *data)
 					temp->key.transinfo[temp->key.transCnt]->money = e.money;
 					temp->key.transCnt++;
 					
-					step = SENDALERT;
+					step = DRAGMONEYSTEP;
 				}
 			}
 		}
 
 		/*--------------------------Get Touch And Redraw Display Here-------------------------*/
+
+		if (step == DRAGMONEYSTEP)
+		{
+			screensize = finfo.smem_len;
+			fbp = (char *)mmap(0,
+							   screensize,
+							   PROT_READ | PROT_WRITE,
+							   MAP_SHARED,
+							   fbfd,
+							   0);
+			if ((int)fbp == -1)
+			{
+				printf("Failed to mmap\n");
+			}
+			else
+			{
+				// draw...
+				//-----------------------------------------------------------graphics loop here
+
+				//	draw();
+
+				int fps = 60;
+				int secs = 10;
+				int xloc = 1;
+				int yloc = 1;
+				for (int i = 1; i < 3; i++)
+				{
+					if (clrcnt == 0)
+						clear_screen(0);
+					// change page to draw to (between 0 and 1)
+					cur_page = (cur_page + 1) % 2;
+					// clear the previous image (= fill entire screen)
+					drawline(100, 400, xloc + 222, 555);
+					draw_char(money, (cont_x*2-120), (cont_y/2-25), 350, 70, 6);
+					draw_char(locker, 1460, 125, 150, 50, 6);
+
+					// switch page
+					vinfo.yoffset = cur_page * vinfo.yres;
+					ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+					// the call to waitforvsync should use a pointer to a variable
+					// https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+					// so should be in fact like this:
+					__u32 dummy = 0;
+					ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+					// also should of course check the return values of the ioctl calls...
+					if (yloc >= vinfo.yres / 2)
+						yloc = 1;
+					if (xloc >= 100)
+						yloc = 1;
+					yloc++;
+					xloc++;
+				}
+				clrcnt = 1;
+				//-----------------------------------------------------------graphics loop here
+			}
+
+			// unmap fb file from memory
+			munmap(fbp, screensize);
+			// reset cursor
+			if (kbfd >= 0)
+			{
+				ioctl(kbfd, KDSETMODE, KD_TEXT);
+				// close kb file
+				close(kbfd);
+			}
+			// reset the display mode
+			if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo))
+			{
+				printf("Error re-setting variable information.\n");
+			}
+
+			//step forwarwd to  step 1
+				//if (x >= 430)
+				//{
+				//}
+			if(step == DRAGMONEYSTEP){
+				cont_cnt++;
+				if(cont_cnt > 100){
+					clrcnt = 0;
+				}	
+				if(cont_x >= 730 && cont_x <= 780 && cont_y >= 190 && cont_y<= 310){
+					clrcnt = 0;
+					x=0;
+					y=0;
+					step = SENDALERT;
+				}
+			}
+		}
 	}
 }
 
