@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 img = cv2.imread('images/locker.jpg',0)
 
-img = cv2.resize(img, dsize=(300, 150), interpolation=cv2.INTER_AREA)
+img = cv2.resize(img, dsize=(150, 50), interpolation=cv2.INTER_AREA)
 
 get = []
 c = 0
